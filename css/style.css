@@ -263,12 +263,41 @@ header {
     background: #fafafa;
     display: flex;
     gap: 15px;
+    cursor: grab;
 }
 
 .task-card:hover {
     transform: translateX(5px);
     border-color: #667eea;
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.task-card:active {
+    cursor: grabbing;
+}
+
+.task-card.dragging {
+    opacity: 0.5;
+    transform: rotate(3deg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.task-card.drag-over {
+    border-color: #10b981;
+    border-style: dashed;
+    background: #d1fae5;
+}
+
+.drag-hint {
+    font-size: 16px;
+    color: #999;
+    cursor: grab;
+    user-select: none;
+    padding: 5px;
+}
+
+.drag-hint:hover {
+    color: #667eea;
 }
 
 .task-card.selected {

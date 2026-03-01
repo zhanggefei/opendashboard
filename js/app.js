@@ -288,6 +288,15 @@ function renderTasks(filteredTasks) {
 function renderTaskCard(task) {
     const card = document.createElement('div');
     card.className = 'task-card';
+    card.draggable = true;
+    card.dataset.taskId = task.id;
+    
+    // 添加拖拽事件
+    card.addEventListener('dragstart', handleDragStart);
+    card.addEventListener('dragover', handleDragOver);
+    card.addEventListener('drop', handleDrop);
+    card.addEventListener('dragend', handleDragEnd);
+    
     if (selectedTasks.has(task.id)) {
         card.classList.add('selected');
     }
@@ -315,12 +324,8 @@ function renderTaskCard(task) {
         ? `<button class="action-btn retry-btn" onclick="retryTask('${task.id}')">🔄 重试</button>`
         : '';
     
-    const orderButtons = task.status === 'todo'
-        ? `
-        <button class="action-btn order-btn" onclick="moveTaskUp('${task.id}')" title="上移">⬆️</button>
-        <button class="action-btn order-btn" onclick="moveTaskDown('${task.id}')" title="下移">⬇️</button>
-        `
-        : '';
+    // 拖拽提示（所有任务都支持拖拽）
+    const dragHint = `<span class="drag-hint" title="拖拽调整顺序">↕️</span>`;
     
     card.innerHTML = `
         <div class="task-checkbox">
@@ -349,7 +354,7 @@ function renderTaskCard(task) {
             ` : ''}
             <p class="task-desc">${task.description}</p>
             <div class="task-actions">
-                ${orderButtons}
+                ${dragHint}
                 ${retryButton}
                 <button class="action-btn info-btn" onclick="showDependencyModal('${task.id}')" title="依赖关系">🔗</button>
                 <button class="action-btn info-btn" onclick="showCommentsModal('${task.id}')" title="评论日志">💬</button>
@@ -545,6 +550,66 @@ function saveTasks() {
         taskOrder: taskOrder
     });
     alert('任务已更新！\n\n请推送更改到 GitHub 以同步在线环境。');
+}
+
+// 拖拽排序相关变量
+let draggedTask = null;
+
+// 拖拽开始
+function handleDragStart(e) {
+    draggedTask = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.dataset.taskId);
+}
+
+// 拖拽经过
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    this.classList.add('drag-over');
+}
+
+// 拖拽离开
+function handleDragLeave(e) {
+    this.classList.remove('drag-over');
+}
+
+// 拖拽放下
+function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    
+    if (draggedTask && draggedTask !== this) {
+        const fromId = draggedTask.dataset.taskId;
+        const toId = this.dataset.taskId;
+        
+        // 交换任务顺序
+        const fromIndex = tasks.findIndex(t => t.id === fromId);
+        const toIndex = tasks.findIndex(t => t.id === toId);
+        
+        if (fromIndex !== -1 && toIndex !== -1) {
+            // 移动任务
+            const [movedTask] = tasks.splice(fromIndex, 1);
+            tasks.splice(toIndex, 0, movedTask);
+            
+            // 更新顺序
+            updateTaskOrder();
+            
+            // 保存并重新渲染
+            saveTasks();
+            applyFilters();
+        }
+    }
+}
+
+// 拖拽结束
+function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    document.querySelectorAll('.task-card').forEach(card => {
+        card.classList.remove('drag-over');
+    });
+    draggedTask = null;
 }
 
 // 自动刷新（每 5 分钟）
