@@ -68,19 +68,19 @@
 
         <!-- 统计卡片 -->
         <div class="stats">
-            <div class="stat-card done">
+            <div class="stat-card done" onclick="filterByStatus('done')" style="cursor: pointer;" title="点击筛选已完成任务">
                 <div class="stat-number" id="statDone">0</div>
                 <div class="stat-label">✅ 已完成</div>
             </div>
-            <div class="stat-card progress">
+            <div class="stat-card progress" onclick="filterByStatus('progress')" style="cursor: pointer;" title="点击筛选进行中任务">
                 <div class="stat-number" id="statProgress">0</div>
                 <div class="stat-label">🔄 进行中</div>
             </div>
-            <div class="stat-card todo">
+            <div class="stat-card todo" onclick="filterByStatus('todo')" style="cursor: pointer;" title="点击筛选待办任务">
                 <div class="stat-number" id="statTodo">0</div>
                 <div class="stat-label">🆕 待办</div>
             </div>
-            <div class="stat-card blocked">
+            <div class="stat-card blocked" onclick="filterByStatus('blocked')" style="cursor: pointer;" title="点击筛选阻塞任务">
                 <div class="stat-number" id="statBlocked">0</div>
                 <div class="stat-label">⏸️ 阻塞</div>
             </div>

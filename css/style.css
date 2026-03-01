@@ -191,11 +191,28 @@ header {
     padding: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     text-align: center;
-    transition: transform 0.3s;
+    transition: all 0.3s;
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+}
+
+.stat-card:active {
+    transform: scale(0.95);
+}
+
+/* 任务高亮效果 */
+.task-card.highlight-task {
+    animation: highlight-pulse 1s ease-in-out;
+    border-color: #10b981;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+}
+
+@keyframes highlight-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 .stat-number {

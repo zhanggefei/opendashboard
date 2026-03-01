@@ -372,6 +372,23 @@ function renderTaskCard(task) {
     }
 }
 
+// 按状态筛选
+function filterByStatus(status) {
+    document.getElementById('statusFilter').value = status;
+    applyFilters();
+    
+    // 滚动到第一个任务
+    setTimeout(() => {
+        const firstTask = document.querySelector(`.task-card[data-task-id]`);
+        if (firstTask) {
+            firstTask.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 高亮闪烁效果
+            firstTask.classList.add('highlight-task');
+            setTimeout(() => firstTask.classList.remove('highlight-task'), 2000);
+        }
+    }, 100);
+}
+
 // 清空筛选
 function clearFilters() {
     document.getElementById('searchInput').value = '';
