@@ -324,8 +324,8 @@ function renderTaskCard(task) {
         ? `<button class="action-btn retry-btn" onclick="retryTask('${task.id}')">🔄 重试</button>`
         : '';
     
-    // 拖拽提示（所有任务都支持拖拽）
-    const dragHint = `<span class="drag-hint" title="拖拽调整顺序">↕️</span>`;
+    // 移除上下箭头，改用拖拽
+    const dragHint = '';
     
     card.innerHTML = `
         <div class="task-checkbox">
