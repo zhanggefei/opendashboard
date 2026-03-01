@@ -22,6 +22,8 @@
                     <span id="lastUpdate">最后更新：--</span>
                     <button class="icon-btn" onclick="toggleNotifications()" title="通知设置">🔔</button>
                     <button class="icon-btn" onclick="showIdentityPanel()" title="身份管理">👤</button>
+                    <button class="icon-btn" onclick="showTemplatesModal()" title="任务模板">📋</button>
+                    <button class="icon-btn" onclick="showExportModal()" title="导出数据">📥</button>
                     <button class="icon-btn" onclick="showAnalyticsModal()" title="数据报表">📊</button>
                     <button class="refresh-btn" onclick="loadTasks()">🔄 刷新</button>
                 </div>
@@ -176,14 +178,45 @@
             <div id="doneTasks" class="task-list"></div>
         </div>
 
-        <!-- 页脚 -->
-        <footer>
-            <p>🐶 Powered by OpenClaw | 
-               <a href="https://github.com/zhanggefei/opendashboard" target="_blank">GitHub</a> | 
-               <a href="docs/API.md">API 文档</a>
-            </p>
-            <p class="footer-note">数据文件：tasks/tasks.json</p>
-        </footer>
+        <!-- 导出模态框 -->
+        <div id="exportModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📥 导出数据</h3>
+                    <button class="modal-close" onclick="closeExportModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <div class="export-option">
+                            <h4>📄 JSON 格式</h4>
+                            <p>导出完整任务数据（包含所有字段）</p>
+                            <button class="btn-primary" onclick="exportToJSON()">下载 JSON</button>
+                        </div>
+                        <div class="export-option">
+                            <h4>📊 CSV 格式</h4>
+                            <p>导出为表格格式，可用于 Excel</p>
+                            <button class="btn-primary" onclick="exportToCSV()">下载 CSV</button>
+                        </div>
+                        <div class="export-option">
+                            <h4>📑 PDF 报告</h4>
+                            <p>生成美观的 PDF 报表</p>
+                            <button class="btn-primary" onclick="exportToPDF()">下载 PDF</button>
+                        </div>
+                    </div>
+                    
+                    <div class="export-filters">
+                        <h4>筛选选项</h4>
+                        <label><input type="checkbox" id="exportAll" checked onchange="toggleExportFilters()"> 导出全部任务</label>
+                        <div id="exportFilterOptions" style="display: none; margin-top: 10px;">
+                            <label><input type="checkbox" id="exportDone"> 已完成</label>
+                            <label><input type="checkbox" id="exportProgress"> 进行中</label>
+                            <label><input type="checkbox" id="exportTodo"> 待办</label>
+                            <label><input type="checkbox" id="exportBlocked"> 阻塞</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/notifications.js"></script>

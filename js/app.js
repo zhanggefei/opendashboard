@@ -812,6 +812,374 @@ setInterval(() => {
     loadTasks();
 }, 5 * 60 * 1000);
 
+// ============== 任务模板功能 ==============
+
+// 默认任务模板
+const defaultTemplates = [
+    {
+        id: 'TPL001',
+        name: '📊 数据分析任务',
+        description: '分析客户/销售数据，输出报告',
+        template: {
+            priority: 'P1',
+            estimatedTime: '30 分钟',
+            description: '分析数据并输出详细报告，包含图表和结论。'
+        }
+    },
+    {
+        id: 'TPL002',
+        name: '📧 客户跟进任务',
+        description: '跟进潜在客户或现有客户',
+        template: {
+            priority: 'P0',
+            estimatedTime: '15 分钟',
+            description: '联系客户，了解需求，推动销售进程。'
+        }
+    },
+    {
+        id: 'TPL003',
+        name: '🐛 Bug 修复',
+        description: '修复系统或应用中的问题',
+        template: {
+            priority: 'P0',
+            estimatedTime: '1 小时',
+            description: '定位问题原因，修复并测试验证。'
+        }
+    },
+    {
+        id: 'TPL004',
+        name: '✨ 新功能开发',
+        description: '开发新功能或优化现有功能',
+        template: {
+            priority: 'P1',
+            estimatedTime: '4 小时',
+            description: '需求分析、设计、开发、测试、文档。'
+        }
+    },
+    {
+        id: 'TPL005',
+        name: '📝 文档编写',
+        description: '编写技术文档或使用说明',
+        template: {
+            priority: 'P2',
+            estimatedTime: '1 小时',
+            description: '编写清晰完整的文档，包含示例和截图。'
+        }
+    }
+];
+
+// 显示模板选择器
+function showTemplatesModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>📋 任务模板</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="template-list">
+                    ${defaultTemplates.map(tpl => `
+                        <div class="template-item" onclick="useTemplate('${tpl.id}')">
+                            <div class="template-header">
+                                <span class="template-name">${tpl.name}</span>
+                                <span class="template-time">${tpl.template.estimatedTime}</span>
+                            </div>
+                            <p class="template-desc">${tpl.description}</p>
+                            <div class="template-meta">
+                                <span class="badge badge-${tpl.template.priority.toLowerCase()}">${tpl.template.priority}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="template-actions">
+                    <button class="btn-secondary" onclick="showCreateTaskFromTemplate()">➕ 创建新任务</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// 使用模板创建任务
+function useTemplate(templateId) {
+    const template = defaultTemplates.find(t => t.id === templateId);
+    if (!template) return;
+    
+    const title = prompt('输入任务标题:', template.name.replace(/^[^\s]+\s/, ''));
+    if (!title) return;
+    
+    const newTask = {
+        id: `T${String(tasks.length + 1).padStart(3, '0')}`,
+        title: title,
+        priority: template.template.priority,
+        status: 'todo',
+        progress: 0,
+        description: template.template.description,
+        estimatedTime: template.template.estimatedTime,
+        assignee: '狗蛋',
+        retryCount: 0,
+        createdAt: new Date().toLocaleString('zh-CN')
+    };
+    
+    tasks.unshift(newTask);
+    saveTasks();
+    applyFilters();
+    
+    alert(`✅ 已创建任务：${newTask.title}`);
+    
+    // 关闭模态框
+    const modal = document.querySelector('.modal');
+    if (modal) modal.remove();
+}
+
+// 显示创建任务表单
+function showCreateTaskFromTemplate() {
+    const modal = document.querySelector('.modal');
+    if (modal) modal.remove();
+    
+    setTimeout(() => {
+        const newModal = document.createElement('div');
+        newModal.className = 'modal';
+        newModal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3>➕ 创建新任务</h3>
+                    <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>任务标题 *</label>
+                        <input type="text" id="newTaskTitle" placeholder="输入任务标题" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                    </div>
+                    <div class="form-group">
+                        <label>任务描述</label>
+                        <textarea id="newTaskDesc" placeholder="输入任务描述" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px; min-height: 100px;"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>优先级</label>
+                            <select id="newTaskPriority" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                                <option value="P0">P0 紧急重要</option>
+                                <option value="P1" selected>P1 重要</option>
+                                <option value="P2">P2 普通</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>预计时间</label>
+                            <input type="text" id="newTaskTime" placeholder="例如：30 分钟" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                        </div>
+                    </div>
+                    <div class="template-actions">
+                        <button class="btn-primary" onclick="createNewTask()">✅ 创建任务</button>
+                        <button class="btn-secondary" onclick="this.closest('.modal').remove()">取消</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(newModal);
+    }, 100);
+}
+
+// 创建新任务
+function createNewTask() {
+    const title = document.getElementById('newTaskTitle').value.trim();
+    if (!title) {
+        alert('请输入任务标题');
+        return;
+    }
+    
+    const newTask = {
+        id: `T${String(tasks.length + 1).padStart(3, '0')}`,
+        title: title,
+        priority: document.getElementById('newTaskPriority').value,
+        status: 'todo',
+        progress: 0,
+        description: document.getElementById('newTaskDesc').value.trim() || '暂无描述',
+        estimatedTime: document.getElementById('newTaskTime').value.trim() || '未设定',
+        assignee: '狗蛋',
+        retryCount: 0,
+        createdAt: new Date().toLocaleString('zh-CN')
+    };
+    
+    tasks.unshift(newTask);
+    saveTasks();
+    applyFilters();
+    
+    alert(`✅ 已创建任务：${newTask.title}`);
+    
+    const modal = document.querySelector('.modal');
+    if (modal) modal.remove();
+}
+
+// ============== 任务导出功能 ==============
+
+// 显示导出模态框
+function showExportModal() {
+    document.getElementById('exportModal').style.display = 'block';
+}
+
+// 关闭导出模态框
+function closeExportModal() {
+    document.getElementById('exportModal').style.display = 'none';
+}
+
+// 切换导出筛选选项
+function toggleExportFilters() {
+    const exportAll = document.getElementById('exportAll');
+    const filterOptions = document.getElementById('exportFilterOptions');
+    filterOptions.style.display = exportAll.checked ? 'none' : 'block';
+}
+
+// 获取导出任务列表
+function getExportTasks() {
+    const exportAll = document.getElementById('exportAll');
+    
+    if (exportAll.checked) {
+        return tasks;
+    }
+    
+    const filters = {
+        done: document.getElementById('exportDone').checked,
+        progress: document.getElementById('exportProgress').checked,
+        todo: document.getElementById('exportTodo').checked,
+        blocked: document.getElementById('exportBlocked').checked
+    };
+    
+    return tasks.filter(task => {
+        if (task.status === 'done' && filters.done) return true;
+        if (task.status === 'progress' && filters.progress) return true;
+        if (task.status === 'todo' && filters.todo) return true;
+        if (task.status === 'blocked' && filters.blocked) return true;
+        return false;
+    });
+}
+
+// 导出为 JSON
+function exportToJSON() {
+    const exportTasks = getExportTasks();
+    const data = {
+        exportTime: new Date().toISOString(),
+        totalTasks: exportTasks.length,
+        tasks: exportTasks
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `opendashboard-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ 已导出 ${exportTasks.length} 个任务到 JSON 文件`);
+    closeExportModal();
+}
+
+// 导出为 CSV
+function exportToCSV() {
+    const exportTasks = getExportTasks();
+    
+    const headers = ['ID', '标题', '优先级', '状态', '进度', '描述', '预计时间', '负责人', '创建时间'];
+    const rows = exportTasks.map(task => [
+        task.id,
+        `"${task.title.replace(/"/g, '""')}"`,
+        task.priority,
+        task.status,
+        task.progress || 0,
+        `"${task.description.replace(/"/g, '""')}"`,
+        task.estimatedTime || '',
+        task.assignee || '',
+        task.createdAt || ''
+    ]);
+    
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `opendashboard-export-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ 已导出 ${exportTasks.length} 个任务到 CSV 文件`);
+    closeExportModal();
+}
+
+// 导出为 PDF
+function exportToPDF() {
+    const exportTasks = getExportTasks();
+    
+    // 简单 PDF 导出（使用浏览器打印功能）
+    const printWindow = window.open('', '_blank');
+    const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>OpenDashboard 任务报告</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; }
+                h1 { color: #667eea; }
+                .meta { color: #666; margin-bottom: 20px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                th { background: #667eea; color: white; }
+                tr:nth-child(even) { background: #f9f9f9; }
+                .status-done { color: #10b981; }
+                .status-progress { color: #3b82f6; }
+                .status-todo { color: #f59e0b; }
+                .status-blocked { color: #ef4444; }
+            </style>
+        </head>
+        <body>
+            <h1>🎯 OpenDashboard 任务报告</h1>
+            <div class="meta">
+                <p>导出时间：${new Date().toLocaleString('zh-CN')}</p>
+                <p>任务总数：${exportTasks.length}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <th>优先级</th>
+                        <th>状态</th>
+                        <th>进度</th>
+                        <th>负责人</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${exportTasks.map(task => `
+                        <tr>
+                            <td>${task.id}</td>
+                            <td>${task.title}</td>
+                            <td>${task.priority}</td>
+                            <td class="status-${task.status}">${task.status}</td>
+                            <td>${task.progress || 0}%</td>
+                            <td>${task.assignee || '-'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <script>window.onload = function() { window.print(); }</script>
+        </body>
+        </html>
+    `;
+    
+    printWindow.document.write(html);
+    printWindow.document.close();
+    
+    alert(`📑 PDF 导出：浏览器将打开打印对话框，选择"另存为 PDF"即可`);
+    closeExportModal();
+}
+
 // ============== 深色模式 ==============
 
 // 初始化深色模式
