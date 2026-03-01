@@ -4,7 +4,7 @@ class IdentityManager {
     constructor() {
         this.identities = [
             {
-                id: 'dog蛋',
+                id: 'dogdan',
                 name: '狗蛋 - 专属 AI 助手',
                 icon: '🤖',
                 color: '#667eea',
@@ -36,7 +36,7 @@ class IdentityManager {
                 tasks: []
             }
         ];
-        this.currentIdentity = 'dog蛋';
+        this.currentIdentity = 'dogdan';
         this.load();
     }
 
@@ -89,9 +89,16 @@ class IdentityManager {
     load() {
         try {
             const data = JSON.parse(localStorage.getItem('identityManager'));
-            if (data) {
-                this.identities = data.identities || this.identities;
-                this.currentIdentity = data.currentIdentity || 'dog蛋';
+            if (data && data.identities) {
+                // 合并保存的身份和默认身份，保留任务
+                this.identities = this.identities.map(defaultIdentity => {
+                    const savedIdentity = data.identities.find(i => i.id === defaultIdentity.id);
+                    if (savedIdentity) {
+                        return { ...defaultIdentity, tasks: savedIdentity.tasks || [] };
+                    }
+                    return defaultIdentity;
+                });
+                this.currentIdentity = data.currentIdentity || 'dogdan';
             }
         } catch (e) {
             console.error('加载身份管理失败:', e);
@@ -131,9 +138,7 @@ function renderIdentities() {
 function switchIdentity(identityId) {
     window.identityManager.switchIdentity(identityId);
     renderIdentities();
-    setTimeout(() => {
-        renderTasks();
-    }, 100);
+    renderTasks();
 }
 
 // 渲染任务列表
@@ -144,8 +149,6 @@ function renderTasks() {
     const identity = window.identityManager.getCurrentIdentity();
     if (!identity) return;
 
-    console.log('当前身份:', identity.id, '任务数:', identity.tasks.length);
-
     // 紧急任务优先显示
     const urgentTasks = identity.tasks.filter(t => t.priority === 'P0');
     const normalTasks = identity.tasks.filter(t => t.priority !== 'P0');
@@ -154,16 +157,16 @@ function renderTasks() {
 
     // 紧急任务
     if (urgentTasks.length > 0) {
-        html += '<div class="task-section"><h3>🔴 紧急任务（立即执行）</h3>';
+        html += '<div class="task-section"><h3>🔴 紧急任务（立即执行）</h3><div class="task-grid">';
         html += urgentTasks.map(task => renderTaskCard(task)).join('');
-        html += '</div>';
+        html += '</div></div>';
     }
 
     // 普通任务
     if (normalTasks.length > 0) {
-        html += '<div class="task-section"><h3>📋 普通任务</h3>';
+        html += '<div class="task-section"><h3>📋 普通任务</h3><div class="task-grid">';
         html += normalTasks.map(task => renderTaskCard(task)).join('');
-        html += '</div>';
+        html += '</div></div>';
     }
 
     if (identity.tasks.length === 0) {
@@ -171,9 +174,6 @@ function renderTasks() {
     }
 
     container.innerHTML = html;
-    
-    // 更新身份卡片上的任务数量显示
-    renderIdentities();
 }
 
 // 渲染任务卡片
@@ -237,8 +237,16 @@ function completeTask(taskId) {
 
 // 添加示例任务
 function addSampleTasks() {
-    console.log('添加示例任务...');
-    
+    // 狗蛋任务
+    window.identityManager.addTask('dogdan', {
+        id: 'dog_001',
+        title: '完成今日工作汇报',
+        description: '汇总今日完成的所有工作，生成总结报告',
+        priority: 'P0',
+        status: 'todo',
+        deadline: '2026-03-01'
+    });
+
     // CRM 数据分析师任务
     window.identityManager.addTask('crm_analyst', {
         id: 'crm_001',
@@ -248,7 +256,6 @@ function addSampleTasks() {
         status: 'done',
         deadline: '2026-03-01'
     });
-    console.log('CRM 分析师任务数:', window.identityManager.identities.find(i => i.id === 'crm_analyst').tasks.length);
 
     // OpenDashboard 开发者任务
     window.identityManager.addTask('developer', {
@@ -259,7 +266,14 @@ function addSampleTasks() {
         status: 'progress',
         deadline: '2026-03-01'
     });
-    console.log('开发者任务数:', window.identityManager.identities.find(i => i.id === 'developer').tasks.length);
+    window.identityManager.addTask('developer', {
+        id: 'dev_002',
+        title: '修复身份切换 bug',
+        description: '修复点击身份时任务数量不更新的问题',
+        priority: 'P0',
+        status: 'progress',
+        deadline: '2026-03-01'
+    });
 
     // 30 天优化计划任务
     window.identityManager.addTask('optimizer', {
@@ -270,7 +284,6 @@ function addSampleTasks() {
         status: 'todo',
         deadline: '2026-03-02'
     });
-    console.log('优化计划任务数:', window.identityManager.identities.find(i => i.id === 'optimizer').tasks.length);
 }
 
 // 初始化
