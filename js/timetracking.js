@@ -158,5 +158,16 @@ window.startTracking = startTracking;
 window.stopTracking = stopTracking;
 window.showTimeStatsModal = showTimeStatsModal;
 
-// 每秒更新
-setInterval(() => { if (window.timeTracker) location.reload(); }, 1000);
+// 每秒更新追踪显示（不刷新页面）
+setInterval(() => {
+    if (window.timeTracker) {
+        // 更新所有追踪中的任务显示
+        Object.keys(window.timeTracker.trackingSessions).forEach(taskId => {
+            const el = document.querySelector(`.time-tracker[data-task="${taskId}"]`);
+            if (el) {
+                const time = window.timeTracker.getCurrentTrackingTime(taskId);
+                el.querySelector('.time-display').textContent = window.timeTracker.formatTime(time);
+            }
+        });
+    }
+}, 1000);
