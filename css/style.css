@@ -202,6 +202,66 @@ header {
     transition: width 0.3s;
 }
 
+/* 任务操作按钮 */
+.task-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.order-btn {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.order-btn:hover {
+    background: #e5e7eb;
+}
+
+.retry-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.retry-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* 错误信息 */
+.error-message {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin: 10px 0;
+    border-left: 3px solid #dc2626;
+}
+
+/* 重试徽章 */
+.retry-badge {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: help;
+}
+
 /* 页脚 */
 footer {
     text-align: center;

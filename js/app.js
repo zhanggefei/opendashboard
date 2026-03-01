@@ -1,6 +1,7 @@
-// OpenDashboard 应用逻辑
+// OpenDashboard 应用逻辑 - 支持重试和排序
 
 let tasks = [];
+let taskOrder = [];
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', loadTasks);
@@ -8,26 +9,41 @@ document.addEventListener('DOMContentLoaded', loadTasks);
 // 加载任务数据
 async function loadTasks() {
     try {
-        // 显示加载状态
         showLoading();
         
-        // 从本地文件加载（开发环境）
         const response = await fetch('tasks/tasks.json');
         if (!response.ok) throw new Error('无法加载任务数据');
         
-        tasks = await response.json();
+        const data = await response.json();
+        tasks = data.tasks || [];
+        taskOrder = data.taskOrder || [];
         
-        // 渲染任务
+        // 应用自定义顺序
+        if (taskOrder.length > 0) {
+            applyCustomOrder();
+        }
+        
         renderTasks();
-        
-        // 更新时间
         updateLastUpdate();
         
     } catch (error) {
         console.error('加载任务失败:', error);
-        // 使用示例数据
         loadSampleTasks();
     }
+}
+
+// 应用自定义顺序
+function applyCustomOrder() {
+    const orderMap = new Map();
+    taskOrder.forEach((id, index) => {
+        orderMap.set(id, index);
+    });
+    
+    tasks.sort((a, b) => {
+        const aOrder = orderMap.has(a.id) ? orderMap.get(a.id) : 999;
+        const bOrder = orderMap.has(b.id) ? orderMap.get(b.id) : 999;
+        return aOrder - bOrder;
+    });
 }
 
 // 显示加载状态
@@ -39,66 +55,53 @@ function showLoading() {
 
 // 加载示例数据（备用）
 function loadSampleTasks() {
-    tasks = {
-        tasks: [
-            {
-                id: 'T001',
-                title: '公海客户优先级分析',
-                priority: 'P0',
-                status: 'done',
-                progress: 100,
-                description: '完成 5,800 个公海客户的优先级分析，输出 B/C/D/E 分级报告。',
-                startTime: '2026-03-01 08:03',
-                completedTime: '2026-03-01 08:17'
-            },
-            {
-                id: 'T002',
-                title: '客户跟进情况评估',
-                priority: 'P0',
-                status: 'done',
-                progress: 100,
-                description: '分析 5,565 个客户的跟进记录，输出跟进率、行业分布等详细报告。',
-                startTime: '2026-03-01 10:14',
-                completedTime: '2026-03-01 10:17'
-            },
-            {
-                id: 'T003',
-                title: '定期汇报机制',
-                priority: 'P1',
-                status: 'progress',
-                progress: 50,
-                description: '建立每 30 分钟定期汇报机制，确保及时了解任务进展。',
-                startTime: '2026-03-01 08:03'
-            },
-            {
-                id: 'T004',
-                title: 'B 级客户详细列表导出',
-                priority: 'P1',
-                status: 'todo',
-                progress: 0,
-                description: '导出 987 个 B 级客户（30 天内有跟进）的详细信息。',
-                estimatedTime: '5 分钟'
-            },
-            {
-                id: 'T005',
-                title: 'KA 区域激活方案',
-                priority: 'P1',
-                status: 'todo',
-                progress: 0,
-                description: '针对 KA 区域跟进率仅 10.9% 的问题，制定重新激活方案。',
-                estimatedTime: '15 分钟'
-            },
-            {
-                id: 'T006',
-                title: '销售跟进效率分析',
-                priority: 'P2',
-                status: 'todo',
-                progress: 0,
-                description: '分析每个销售的跟进效率，找出最佳实践和改进空间。',
-                estimatedTime: '10 分钟'
-            }
-        ]
-    };
+    tasks = [
+        {
+            id: 'T001',
+            title: '公海客户优先级分析',
+            priority: 'P0',
+            status: 'done',
+            progress: 100,
+            description: '完成 5,800 个公海客户的优先级分析。',
+            startTime: '2026-03-01 08:03',
+            completedTime: '2026-03-01 08:17',
+            retryCount: 0
+        },
+        {
+            id: 'T003',
+            title: '定期汇报机制',
+            priority: 'P1',
+            status: 'blocked',
+            progress: 50,
+            description: '建立每 30 分钟定期汇报机制。',
+            startTime: '2026-03-01 08:03',
+            retryCount: 0,
+            lastError: '错过 4 次汇报，需要重新建立机制'
+        },
+        {
+            id: 'T004',
+            title: 'B 级客户详细列表导出',
+            priority: 'P1',
+            status: 'todo',
+            progress: 0,
+            description: '导出 987 个 B 级客户的详细信息。',
+            estimatedTime: '5 分钟',
+            retryCount: 0,
+            order: 1
+        },
+        {
+            id: 'T007',
+            title: 'GitHub opendashboard 项目创建',
+            priority: 'P0',
+            status: 'done',
+            progress: 100,
+            description: '创建 GitHub 项目并推送代码。',
+            startTime: '2026-03-01 12:02',
+            completedTime: '2026-03-01 12:19',
+            retryCount: 2,
+            lastError: 'Token 权限不足，已重新生成'
+        }
+    ];
     
     renderTasks();
     updateLastUpdate();
@@ -116,7 +119,7 @@ function renderTasks() {
     let stats = { done: 0, progress: 0, todo: 0, blocked: 0 };
     
     // 按状态分组
-    tasks.tasks.forEach(task => {
+    tasks.forEach(task => {
         stats[task.status]++;
         renderTaskCard(task);
     });
@@ -146,6 +149,29 @@ function renderTaskCard(task) {
         blocked: '阻塞'
     };
     
+    // 重试信息
+    const retryInfo = task.retryCount > 0 
+        ? `<span class="retry-badge" title="重试 ${task.retryCount} 次">🔄 ${task.retryCount}次</span>` 
+        : '';
+    
+    // 错误信息
+    const errorInfo = task.lastError 
+        ? `<div class="error-message">⚠️ ${task.lastError}</div>` 
+        : '';
+    
+    // 重试按钮（仅阻塞和失败任务）
+    const retryButton = (task.status === 'blocked' || task.status === 'failed')
+        ? `<button class="action-btn retry-btn" onclick="retryTask('${task.id}')">🔄 重试</button>`
+        : '';
+    
+    // 调整顺序按钮（仅待办任务）
+    const orderButtons = task.status === 'todo'
+        ? `
+        <button class="action-btn order-btn" onclick="moveTaskUp('${task.id}')" title="上移">⬆️</button>
+        <button class="action-btn order-btn" onclick="moveTaskDown('${task.id}')" title="下移">⬇️</button>
+        `
+        : '';
+    
     card.innerHTML = `
         <div class="task-header">
             <span class="task-title">${task.id} - ${task.title}</span>
@@ -157,13 +183,19 @@ function renderTaskCard(task) {
             ${task.startTime ? `<span>开始：${task.startTime}</span>` : ''}
             ${task.estimatedTime ? `<span>预计：${task.estimatedTime}</span>` : ''}
             ${task.completedTime ? `<span>完成：${task.completedTime}</span>` : ''}
+            ${retryInfo}
         </div>
+        ${errorInfo}
         ${task.progress !== undefined ? `
         <div class="progress-bar">
             <div class="progress-fill" style="width: ${task.progress}%"></div>
         </div>
         ` : ''}
         <p class="task-desc">${task.description}</p>
+        <div class="task-actions">
+            ${orderButtons}
+            ${retryButton}
+        </div>
     `;
     
     // 添加到对应列表
@@ -171,6 +203,75 @@ function renderTaskCard(task) {
     if (container) {
         container.appendChild(card);
     }
+}
+
+// 重试任务
+function retryTask(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    if (confirm(`确定要重试任务 "${task.title}" 吗？`)) {
+        task.status = 'todo';
+        task.progress = 0;
+        task.retryCount = (task.retryCount || 0) + 1;
+        task.lastError = null;
+        
+        // 保存到文件（需要后端支持）
+        saveTasks();
+        
+        // 重新渲染
+        renderTasks();
+        
+        alert(`任务 ${taskId} 已重置为待办状态，可以重新开始！`);
+    }
+}
+
+// 上移任务
+function moveTaskUp(taskId) {
+    const index = tasks.findIndex(t => t.id === taskId);
+    if (index <= 0) return;
+    
+    // 交换顺序
+    [tasks[index - 1], tasks[index]] = [tasks[index], tasks[index - 1]];
+    
+    // 更新 order 数组
+    updateTaskOrder();
+    
+    // 保存并重新渲染
+    saveTasks();
+    renderTasks();
+}
+
+// 下移任务
+function moveTaskDown(taskId) {
+    const index = tasks.findIndex(t => t.id === taskId);
+    if (index < 0 || index >= tasks.length - 1) return;
+    
+    // 交换顺序
+    [tasks[index], tasks[index + 1]] = [tasks[index + 1], tasks[index]];
+    
+    // 更新 order 数组
+    updateTaskOrder();
+    
+    // 保存并重新渲染
+    saveTasks();
+    renderTasks();
+}
+
+// 更新任务顺序
+function updateTaskOrder() {
+    taskOrder = tasks.map(t => t.id);
+}
+
+// 保存任务（模拟，实际需要后端）
+function saveTasks() {
+    console.log('保存任务数据:', {
+        tasks: tasks,
+        taskOrder: taskOrder
+    });
+    
+    // 提示用户手动更新
+    alert('任务顺序已更新！\n\n请推送更改到 GitHub：\n1. 提交 tasks/tasks.json\n2. git push\n\n或者我帮您自动推送？');
 }
 
 // 处理空状态
