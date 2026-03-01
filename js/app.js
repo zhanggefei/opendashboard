@@ -13,11 +13,14 @@ let filters = {
 // 初始化全局管理器
 window.dependencyManager = new TaskDependencyManager();
 window.commentManager = new TaskCommentManager();
+window.subtaskManager = new SubtaskManager();
+window.analyticsManager = new DashboardAnalytics();
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
     window.commentManager.load(); // 加载评论和日志
+    window.subtaskManager.load(); // 加载子任务
     window.notificationManager = new NotificationManager(); // 启动通知服务
 });
 
@@ -344,6 +347,9 @@ function renderTaskCard(task) {
             <div class="task-actions">
                 ${orderButtons}
                 ${retryButton}
+                <button class="action-btn info-btn" onclick="showDependencyModal('${task.id}')" title="依赖关系">🔗</button>
+                <button class="action-btn info-btn" onclick="showCommentsModal('${task.id}')" title="评论日志">💬</button>
+                <button class="action-btn info-btn" onclick="showSubtasksModal('${task.id}')" title="子任务">🌳</button>
             </div>
         </div>
     `;

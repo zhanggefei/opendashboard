@@ -143,16 +143,35 @@
       "id": "T010",
       "title": "v1.2 功能开发（任务依赖 + 评论日志）",
       "priority": "P0",
-      "status": "progress",
-      "progress": 40,
+      "status": "done",
+      "progress": 100,
       "description": "开发任务依赖关系管理和评论日志功能。",
       "startTime": "2026-03-01 13:05",
-      "estimatedTime": "40 分钟",
+      "completedTime": "2026-03-01 13:15",
+      "assignee": "狗蛋",
+      "retryCount": 0,
+      "dependencies": ["T009"],
+      "order": 7
+    },
+    {
+      "id": "T011",
+      "title": "v1.3 功能开发（数据报表 + 子任务）",
+      "priority": "P0",
+      "status": "progress",
+      "progress": 60,
+      "description": "开发数据可视化报表和子任务分解功能。",
+      "startTime": "2026-03-01 13:15",
+      "estimatedTime": "30 分钟",
       "assignee": "狗蛋",
       "retryCount": 0,
       "deadline": "2026-03-01 14:00",
-      "dependencies": ["T009"],
-      "order": 7
+      "dependencies": ["T010"],
+      "order": 8,
+      "subtasks": [
+        {"id": "st1", "title": "数据报表模块开发", "status": "done", "priority": "P0"},
+        {"id": "st2", "title": "子任务管理模块开发", "status": "progress", "priority": "P0"},
+        {"id": "st3", "title": "UI 集成和测试", "status": "todo", "priority": "P1"}
+      ]
     }
   ],
   "taskOrder": ["T004", "T005", "T006", "T007", "T008", "T009"],
