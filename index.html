@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenDashboard - 任务管理面板</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header>
+            <div class="header-content">
+                <h1>🎯 OpenDashboard</h1>
+                <p class="subtitle">OpenClaw 任务管理可视化面板</p>
+                <div class="header-meta">
+                    <span id="lastUpdate">最后更新：--</span>
+                    <button class="refresh-btn" onclick="loadTasks()">🔄 刷新</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 统计卡片 -->
+        <div class="stats">
+            <div class="stat-card done">
+                <div class="stat-number" id="statDone">0</div>
+                <div class="stat-label">✅ 已完成</div>
+            </div>
+            <div class="stat-card progress">
+                <div class="stat-number" id="statProgress">0</div>
+                <div class="stat-label">🔄 进行中</div>
+            </div>
+            <div class="stat-card todo">
+                <div class="stat-number" id="statTodo">0</div>
+                <div class="stat-label">🆕 待办</div>
+            </div>
+            <div class="stat-card blocked">
+                <div class="stat-number" id="statBlocked">0</div>
+                <div class="stat-label">⏸️ 阻塞</div>
+            </div>
+        </div>
+
+        <!-- 进行中任务 -->
+        <div class="tasks-section">
+            <h2>🔄 进行中任务</h2>
+            <div id="progressTasks" class="task-list"></div>
+        </div>
+
+        <!-- 待办任务 -->
+        <div class="tasks-section">
+            <h2>🆕 待办任务</h2>
+            <div id="todoTasks" class="task-list"></div>
+        </div>
+
+        <!-- 已完成任务 -->
+        <div class="tasks-section">
+            <h2>✅ 已完成任务</h2>
+            <div id="doneTasks" class="task-list"></div>
+        </div>
+
+        <!-- 阻塞任务 -->
+        <div class="tasks-section">
+            <h2>⏸️ 阻塞任务</h2>
+            <div id="blockedTasks" class="task-list"></div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer>
+            <p>🐶 Powered by OpenClaw | 
+               <a href="https://github.com/zhanggefei/opendashboard" target="_blank">GitHub</a> | 
+               <a href="docs/API.md">API 文档</a>
+            </p>
+            <p class="footer-note">数据文件：tasks/tasks.json</p>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

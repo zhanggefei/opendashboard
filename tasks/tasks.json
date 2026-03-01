@@ -1,0 +1,74 @@
+{
+  "lastUpdate": "2026-03-01T12:18:00+08:00",
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "公海客户优先级分析",
+      "priority": "P0",
+      "status": "done",
+      "progress": 100,
+      "description": "完成 5,800 个公海客户的优先级分析，输出 B/C/D/E 分级报告。",
+      "startTime": "2026-03-01 08:03",
+      "completedTime": "2026-03-01 08:17",
+      "actualTime": "10 分钟"
+    },
+    {
+      "id": "T002",
+      "title": "客户跟进情况评估",
+      "priority": "P0",
+      "status": "done",
+      "progress": 100,
+      "description": "分析 5,565 个客户的跟进记录，输出跟进率、行业分布、区域分布等详细报告。",
+      "startTime": "2026-03-01 10:14",
+      "completedTime": "2026-03-01 10:17",
+      "actualTime": "10 分钟"
+    },
+    {
+      "id": "T003",
+      "title": "定期汇报机制",
+      "priority": "P1",
+      "status": "progress",
+      "progress": 50,
+      "description": "建立每 30 分钟定期汇报机制，确保及时了解任务进展。",
+      "startTime": "2026-03-01 08:03",
+      "nextReport": "12:30 PM"
+    },
+    {
+      "id": "T004",
+      "title": "B 级客户详细列表导出",
+      "priority": "P1",
+      "status": "todo",
+      "progress": 0,
+      "description": "导出 987 个 B 级客户（30 天内有跟进）的详细信息，包括联系人、电话、行业等。",
+      "estimatedTime": "5 分钟"
+    },
+    {
+      "id": "T005",
+      "title": "KA 区域激活方案",
+      "priority": "P1",
+      "status": "todo",
+      "progress": 0,
+      "description": "针对 KA 区域跟进率仅 10.9% 的问题，制定重新激活方案。",
+      "estimatedTime": "15 分钟"
+    },
+    {
+      "id": "T006",
+      "title": "销售跟进效率分析",
+      "priority": "P2",
+      "status": "todo",
+      "progress": 0,
+      "description": "分析每个销售的跟进效率，找出最佳实践和改进空间。",
+      "estimatedTime": "10 分钟"
+    },
+    {
+      "id": "T007",
+      "title": "GitHub opendashboard 项目创建",
+      "priority": "P0",
+      "status": "progress",
+      "progress": 80,
+      "description": "在 GitHub 上创建 opendashboard 项目并推送完整的项目文件。",
+      "startTime": "2026-03-01 12:02",
+      "repo": "https://github.com/zhanggefei/opendashboard"
+    }
+  ]
+}
