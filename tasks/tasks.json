@@ -1,5 +1,17 @@
 {
-  "lastUpdate": "2026-03-01T12:36:00+08:00",
+  "lastUpdate": "2026-03-01T12:55:00+08:00",
+  "settings": {
+    "autoRetry": true,
+    "maxRetries": 3,
+    "retryDelay": "5 分钟",
+    "notifications": {
+      "enabled": true,
+      "channels": ["feishu", "email"],
+      "beforeDeadline": "30 分钟",
+      "onOverdue": true,
+      "onStatusChange": true
+    }
+  },
   "tasks": [
     {
       "id": "T001",
@@ -11,6 +23,7 @@
       "startTime": "2026-03-01 08:03",
       "completedTime": "2026-03-01 08:17",
       "actualTime": "10 分钟",
+      "assignee": "狗蛋",
       "retryCount": 0
     },
     {
@@ -23,6 +36,7 @@
       "startTime": "2026-03-01 10:14",
       "completedTime": "2026-03-01 10:17",
       "actualTime": "10 分钟",
+      "assignee": "狗蛋",
       "retryCount": 0
     },
     {
@@ -33,9 +47,14 @@
       "progress": 50,
       "description": "建立每 30 分钟定期汇报机制，确保及时了解任务进展。",
       "startTime": "2026-03-01 08:03",
-      "nextReport": "12:30 PM",
+      "assignee": "狗蛋",
       "retryCount": 0,
-      "lastError": "错过 4 次汇报，需要重新建立机制"
+      "lastError": "错过 4 次汇报，需要重新建立机制",
+      "deadline": "2026-03-01 18:00",
+      "reminders": [
+        {"time": "2026-03-01 12:30", "type": "overdue", "sent": false},
+        {"time": "2026-03-01 17:30", "type": "before_deadline", "sent": false}
+      ]
     },
     {
       "id": "T004",
@@ -45,8 +64,11 @@
       "progress": 0,
       "description": "导出 987 个 B 级客户（30 天内有跟进）的详细信息，包括联系人、电话、行业等。",
       "estimatedTime": "5 分钟",
+      "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 1
+      "order": 1,
+      "deadline": "2026-03-01 14:00",
+      "reminders": []
     },
     {
       "id": "T005",
@@ -56,8 +78,11 @@
       "progress": 0,
       "description": "针对 KA 区域跟进率仅 10.9% 的问题，制定重新激活方案。",
       "estimatedTime": "15 分钟",
+      "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 2
+      "order": 2,
+      "deadline": "2026-03-01 15:00",
+      "reminders": []
     },
     {
       "id": "T006",
@@ -67,8 +92,11 @@
       "progress": 0,
       "description": "分析每个销售的跟进效率，找出最佳实践和改进空间。",
       "estimatedTime": "10 分钟",
+      "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 3
+      "order": 3,
+      "deadline": "2026-03-01 17:00",
+      "reminders": []
     },
     {
       "id": "T007",
@@ -80,26 +108,58 @@
       "startTime": "2026-03-01 12:02",
       "completedTime": "2026-03-01 12:19",
       "repo": "https://github.com/zhanggefei/opendashboard",
+      "assignee": "狗蛋",
       "retryCount": 2,
       "lastError": "Token 权限不足，已重新生成",
       "order": 4
     },
     {
       "id": "T008",
-      "title": "GitHub Pages 在线环境部署",
+      "title": "v1.1 功能开发（筛选搜索 + 批量操作）",
       "priority": "P0",
-      "status": "progress",
-      "progress": 90,
-      "description": "部署 GitHub Pages 在线测试环境，支持随时访问。",
-      "startTime": "2026-03-01 12:22",
+      "status": "done",
+      "progress": 100,
+      "description": "开发筛选搜索和批量操作功能，提升用户体验。",
+      "startTime": "2026-03-01 12:52",
+      "completedTime": "2026-03-01 12:58",
+      "assignee": "狗蛋",
       "retryCount": 0,
       "order": 5
+    },
+    {
+      "id": "T009",
+      "title": "智能提醒功能开发",
+      "priority": "P0",
+      "status": "progress",
+      "progress": 30,
+      "description": "开发智能提醒功能，支持飞书/邮件通知，截止前提醒，超时告警。",
+      "startTime": "2026-03-01 12:58",
+      "estimatedTime": "30 分钟",
+      "assignee": "狗蛋",
+      "retryCount": 0,
+      "deadline": "2026-03-01 14:00",
+      "order": 6
     }
   ],
-  "taskOrder": ["T004", "T005", "T006", "T007", "T008"],
-  "settings": {
-    "autoRetry": true,
-    "maxRetries": 3,
-    "retryDelay": "5 分钟"
-  }
+  "taskOrder": ["T004", "T005", "T006", "T007", "T008", "T009"],
+  "notifications": [
+    {
+      "id": "N001",
+      "taskId": "T003",
+      "type": "overdue",
+      "message": "任务 T003 已超时，当前状态：阻塞",
+      "scheduledTime": "2026-03-01 12:30",
+      "sent": false,
+      "channel": "feishu"
+    },
+    {
+      "id": "N002",
+      "taskId": "T004",
+      "type": "before_deadline",
+      "message": "任务 T004 将在 30 分钟后截止",
+      "scheduledTime": "2026-03-01 13:30",
+      "sent": false,
+      "channel": "feishu"
+    }
+  ]
 }

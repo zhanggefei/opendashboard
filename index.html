@@ -15,10 +15,14 @@
                 <p class="subtitle">OpenClaw 任务管理可视化面板</p>
                 <div class="header-meta">
                     <span id="lastUpdate">最后更新：--</span>
+                    <button class="icon-btn" onclick="toggleNotifications()" title="通知设置">🔔</button>
                     <button class="refresh-btn" onclick="loadTasks()">🔄 刷新</button>
                 </div>
             </div>
         </header>
+
+        <!-- 提醒通知容器 -->
+        <div id="reminderContainer"></div>
 
         <!-- 筛选搜索栏 -->
         <div class="filter-bar">
@@ -145,6 +149,7 @@
         </footer>
     </div>
 
+    <script src="js/notifications.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

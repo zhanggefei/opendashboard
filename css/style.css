@@ -502,3 +502,137 @@ footer a {
     color: #667eea;
     font-size: 16px;
 }
+
+/* 提醒通知 */
+.reminder {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    transform: translateX(400px);
+    transition: transform 0.3s;
+    max-width: 400px;
+}
+
+.reminder.show {
+    transform: translateX(0);
+}
+
+.reminder-error {
+    border-left: 4px solid #ef4444;
+}
+
+.reminder-warning {
+    border-left: 4px solid #f59e0b;
+}
+
+.reminder-info {
+    border-left: 4px solid #3b82f6;
+}
+
+.reminder button {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.reminder button:hover {
+    color: #333;
+}
+
+/* 图标按钮 */
+.icon-btn {
+    background: #f3f4f6;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    transition: background 0.3s;
+}
+
+.icon-btn:hover {
+    background: #e5e7eb;
+}
+
+/* 通知设置面板 */
+.notification-panel {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: none;
+}
+
+.notification-panel.show {
+    display: block;
+}
+
+.notification-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.notification-setting:last-child {
+    border-bottom: none;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #667eea;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
