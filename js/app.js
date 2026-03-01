@@ -374,8 +374,15 @@ function renderTaskCard(task) {
     }
 }
 
-// 按状态筛选
+// 按状态筛选（阻塞时显示原因）
 function filterByStatus(status) {
+    // 如果是阻塞状态，显示阻塞原因
+    if (status === 'blocked') {
+        showBlockedReasons();
+        return;
+    }
+    
+    // 其他状态正常筛选
     document.getElementById('statusFilter').value = status;
     applyFilters();
     
@@ -384,11 +391,76 @@ function filterByStatus(status) {
         const firstTask = document.querySelector(`.task-card[data-task-id]`);
         if (firstTask) {
             firstTask.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // 高亮闪烁效果
             firstTask.classList.add('highlight-task');
             setTimeout(() => firstTask.classList.remove('highlight-task'), 2000);
         }
     }, 100);
+}
+
+// 显示阻塞原因统计
+function showBlockedReasons() {
+    const blockedTasks = tasks.filter(t => t.status === 'blocked');
+    
+    // 统计阻塞原因
+    const reasons = {};
+    blockedTasks.forEach(task => {
+        const reason = task.lastError || '未知原因';
+        if (!reasons[reason]) {
+            reasons[reason] = { count: 0, tasks: [] };
+        }
+        reasons[reason].count++;
+        reasons[reason].tasks.push(task);
+    });
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⏸️ 阻塞任务分析（共 ${blockedTasks.length} 个）</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="modal-body">
+                ${Object.keys(reasons).length === 0 ? 
+                    '<div class="empty-state">暂无阻塞任务</div>' : 
+                    `<div class="blocked-reasons">
+                        ${Object.entries(reasons).map(([reason, data]) => `
+                            <div class="reason-group">
+                                <div class="reason-header">
+                                    <span class="reason-name">${reason}</span>
+                                    <span class="reason-count">${data.count}个任务</span>
+                                </div>
+                                <div class="reason-tasks">
+                                    ${data.tasks.map(task => `
+                                        <div class="reason-task">
+                                            <span class="task-id">${task.id}</span>
+                                            <span class="task-title">${task.title}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>`
+                }
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="filterByBlocked()">查看阻塞任务</button>
+                    <button class="btn-secondary" onclick="this.closest('.modal').remove()">关闭</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// 筛选阻塞任务
+function filterByBlocked() {
+    document.getElementById('statusFilter').value = 'blocked';
+    applyFilters();
+    
+    // 关闭模态框
+    const modal = document.querySelector('.modal');
+    if (modal) modal.remove();
 }
 
 // 清空筛选

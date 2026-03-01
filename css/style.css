@@ -215,6 +215,98 @@ header {
     50% { transform: scale(1.05); }
 }
 
+/* 阻塞原因分析 */
+.blocked-reasons {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.reason-group {
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.reason-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #fee2e2;
+    border-bottom: 1px solid #fecaca;
+}
+
+.reason-name {
+    font-weight: 600;
+    color: #dc2626;
+}
+
+.reason-count {
+    background: #dc2626;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.reason-tasks {
+    padding: 10px;
+    background: #fef2f2;
+}
+
+.reason-task {
+    display: flex;
+    gap: 10px;
+    padding: 8px;
+    margin-bottom: 5px;
+    background: white;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.reason-task:last-child {
+    margin-bottom: 0;
+}
+
+.task-id {
+    font-weight: 600;
+    color: #667eea;
+    min-width: 60px;
+}
+
+.task-title {
+    color: #333;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
 .stat-number {
     font-size: 36px;
     font-weight: bold;
