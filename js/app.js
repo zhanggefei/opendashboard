@@ -290,10 +290,12 @@ function renderTaskCard(task) {
     card.className = 'task-card';
     card.draggable = true;
     card.dataset.taskId = task.id;
+    card.title = '🖱️ 拖动整个卡片调整顺序';
     
-    // 添加拖拽事件
+    // 添加拖拽事件（整个卡片可拖动）
     card.addEventListener('dragstart', handleDragStart);
     card.addEventListener('dragover', handleDragOver);
+    card.addEventListener('dragleave', handleDragLeave);
     card.addEventListener('drop', handleDrop);
     card.addEventListener('dragend', handleDragEnd);
     
@@ -324,7 +326,7 @@ function renderTaskCard(task) {
         ? `<button class="action-btn retry-btn" onclick="retryTask('${task.id}')">🔄 重试</button>`
         : '';
     
-    // 移除上下箭头，改用拖拽
+    // 整个卡片可拖拽，不需要单独的拖拽提示
     const dragHint = '';
     
     card.innerHTML = `

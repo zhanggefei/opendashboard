@@ -282,6 +282,7 @@ header {
     gap: 15px;
     cursor: grab;
     user-select: none;
+    touch-action: none;
 }
 
 .task-card:hover {
@@ -307,6 +308,11 @@ header {
     border-style: dashed;
     background: #d1fae5;
     transform: scale(1.02);
+}
+
+/* 拖拽时整个卡片可拖动 */
+.task-card[draggable="true"] {
+    -webkit-user-drag: element;
 }
 
 .task-card.selected {
