@@ -28,6 +28,28 @@ document.addEventListener('DOMContentLoaded', () => {
     window.notificationManager = new NotificationManager(); // 启动通知服务
 });
 
+// 身份管理面板切换
+function showIdentityPanel() {
+    document.getElementById('identityPanel').style.display = 'block';
+    if (window.identityManager) {
+        renderIdentities();
+        renderTasks();
+    }
+}
+
+function toggleIdentityPanel() {
+    const panel = document.getElementById('identityPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function showIdentityPanel() {
+    document.getElementById('identityPanel').style.display = 'block';
+    if (window.identityManager) {
+        renderIdentities();
+        renderTasks();
+    }
+}
+
 // 加载任务数据
 async function loadTasks() {
     try {
