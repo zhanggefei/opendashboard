@@ -262,7 +262,7 @@ function applyFilters() {
         return true;
     });
     
-    // 更新统计
+    // 更新统计（使用筛选后的数据）
     updateStats(filteredTasks);
     
     // 渲染任务
@@ -270,6 +270,20 @@ function applyFilters() {
     
     // 更新结果计数
     document.getElementById('resultCount').textContent = `显示 ${filteredTasks.length}/${tasks.length} 任务`;
+    
+    // 更新顶部统计卡片显示（筛选后的数量）
+    updateStatDisplay('statDone', filteredTasks.filter(t => t.status === 'done').length);
+    updateStatDisplay('statProgress', filteredTasks.filter(t => t.status === 'progress').length);
+    updateStatDisplay('statTodo', filteredTasks.filter(t => t.status === 'todo').length);
+    updateStatDisplay('statBlocked', filteredTasks.filter(t => t.status === 'blocked').length);
+}
+
+// 更新统计卡片显示
+function updateStatDisplay(elementId, count) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = count;
+    }
 }
 
 // 更新统计
@@ -720,6 +734,7 @@ function handleDrop(e) {
 function handleDragEnd(e) {
     this.classList.remove('dragging');
     document.querySelectorAll('.task-card').forEach(card => {
+        card.classList.remove('dragging');
         card.classList.remove('drag-over');
     });
     draggedTask = null;
