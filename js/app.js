@@ -84,6 +84,7 @@ class OpenClawIntegration {
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
+    initDarkMode(); // 初始化深色模式
     loadTasks();
     window.commentManager.load(); // 加载评论和日志
     window.subtaskManager.load(); // 加载子任务
@@ -590,6 +591,9 @@ function updateLastUpdate() {
         minute: '2-digit'
     });
     document.getElementById('lastUpdate').textContent = `最后更新：${timeStr}`;
+    
+    // 任务加载完成后渲染图表
+    setTimeout(() => renderCharts(), 100);
 }
 
 // 选择任务
@@ -807,6 +811,255 @@ function handleDragEnd(e) {
 setInterval(() => {
     loadTasks();
 }, 5 * 60 * 1000);
+
+// ============== 深色模式 ==============
+
+// 初始化深色模式
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) {
+        document.body.classList.add('dark-mode');
+        updateDarkModeButton(true);
+    }
+}
+
+// 切换深色模式
+function toggleDarkMode() {
+    const body = document.body;
+    const isDark = body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    updateDarkModeButton(isDark);
+    renderCharts(); // 重新渲染图表以适配主题
+}
+
+// 更新深色模式按钮图标
+function updateDarkModeButton(isDark) {
+    const btn = document.querySelector('.dark-mode-toggle');
+    if (btn) {
+        btn.textContent = isDark ? '☀️' : '🌙';
+    }
+}
+
+// ============== 数据图表 ==============
+
+let statusChartInstance = null;
+let priorityChartInstance = null;
+let assigneeChartInstance = null;
+let progressChartInstance = null;
+
+// 渲染所有图表
+function renderCharts() {
+    renderStatusChart();
+    renderPriorityChart();
+    renderAssigneeChart();
+    renderProgressChart();
+}
+
+// 获取图表颜色
+function getChartColors() {
+    const isDark = document.body.classList.contains('dark-mode');
+    return {
+        text: isDark ? '#e0e0e0' : '#333',
+        grid: isDark ? '#3a3a4e' : '#e5e7eb'
+    };
+}
+
+// 渲染状态分布图
+function renderStatusChart() {
+    const ctx = document.getElementById('statusChart');
+    if (!ctx) return;
+    
+    const stats = {
+        done: tasks.filter(t => t.status === 'done').length,
+        progress: tasks.filter(t => t.status === 'progress').length,
+        todo: tasks.filter(t => t.status === 'todo').length,
+        blocked: tasks.filter(t => t.status === 'blocked').length
+    };
+    
+    if (statusChartInstance) {
+        statusChartInstance.destroy();
+    }
+    
+    statusChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['✅ 已完成', '🔄 进行中', '🆕 待办', '⏸️ 阻塞'],
+            datasets: [{
+                data: [stats.done, stats.progress, stats.todo, stats.blocked],
+                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: getChartColors().text }
+                }
+            }
+        }
+    });
+}
+
+// 渲染优先级分布图
+function renderPriorityChart() {
+    const ctx = document.getElementById('priorityChart');
+    if (!ctx) return;
+    
+    const stats = {
+        p0: tasks.filter(t => t.priority === 'P0').length,
+        p1: tasks.filter(t => t.priority === 'P1').length,
+        p2: tasks.filter(t => t.priority === 'P2').length
+    };
+    
+    if (priorityChartInstance) {
+        priorityChartInstance.destroy();
+    }
+    
+    priorityChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['🔴 P0 紧急重要', '🟠 P1 重要', '🔵 P2 普通'],
+            datasets: [{
+                label: '任务数量',
+                data: [stats.p0, stats.p1, stats.p2],
+                backgroundColor: ['#ef4444', '#f97316', '#3b82f6'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: getChartColors().text },
+                    grid: { color: getChartColors().grid }
+                },
+                x: {
+                    ticks: { color: getChartColors().text },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// 渲染负责人任务量图
+function renderAssigneeChart() {
+    const ctx = document.getElementById('assigneeChart');
+    if (!ctx) return;
+    
+    const assigneeStats = {};
+    tasks.forEach(task => {
+        const assignee = task.assignee || '未分配';
+        assigneeStats[assignee] = (assigneeStats[assignee] || 0) + 1;
+    });
+    
+    if (assigneeChartInstance) {
+        assigneeChartInstance.destroy();
+    }
+    
+    assigneeChartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(assigneeStats),
+            datasets: [{
+                data: Object.values(assigneeStats),
+                backgroundColor: [
+                    '#667eea', '#764ba2', '#f093fb', '#f5576c',
+                    '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
+                    '#fa709a', '#fee140', '#30cfd0', '#330867'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: getChartColors().text }
+                }
+            }
+        }
+    });
+}
+
+// 渲染完成进度趋势图（模拟数据）
+function renderProgressChart() {
+    const ctx = document.getElementById('progressChart');
+    if (!ctx) return;
+    
+    // 模拟 7 天数据
+    const labels = [];
+    const completedData = [];
+    const todoData = [];
+    
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
+        completedData.push(Math.floor(Math.random() * 10) + i * 2);
+        todoData.push(Math.floor(Math.random() * 5) + (6 - i) * 3);
+    }
+    
+    if (progressChartInstance) {
+        progressChartInstance.destroy();
+    }
+    
+    progressChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '✅ 已完成',
+                    data: completedData,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: '🆕 待完成',
+                    data: todoData,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: getChartColors().text }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: getChartColors().text },
+                    grid: { color: getChartColors().grid }
+                },
+                x: {
+                    ticks: { color: getChartColors().text },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
 
 // ============== OpenClaw 集成功能 ==============
 

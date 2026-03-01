@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenDashboard - 任务管理面板</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Chart.js 用于数据可视化 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
+    <!-- 深色模式切换按钮 -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="切换深色模式">🌙</button>
+    
     <div class="container">
         <!-- 头部 -->
         <header>
@@ -94,6 +99,26 @@
             <div class="stat-card blocked" onclick="filterByStatus('blocked')" style="cursor: pointer;" title="点击筛选阻塞任务">
                 <div class="stat-number" id="statBlocked">0</div>
                 <div class="stat-label">⏸️ 阻塞</div>
+            </div>
+        </div>
+
+        <!-- 数据图表 -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>📊 任务状态分布</h3>
+                <canvas id="statusChart" class="chart-canvas"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>🎯 优先级分布</h3>
+                <canvas id="priorityChart" class="chart-canvas"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>👤 负责人任务量</h3>
+                <canvas id="assigneeChart" class="chart-canvas"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>📈 完成进度趋势</h3>
+                <canvas id="progressChart" class="chart-canvas"></canvas>
             </div>
         </div>
 
