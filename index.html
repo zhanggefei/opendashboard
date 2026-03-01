@@ -20,6 +20,47 @@
             </div>
         </header>
 
+        <!-- 筛选搜索栏 -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label>🔍 搜索:</label>
+                <input type="text" id="searchInput" placeholder="搜索任务标题、描述..." oninput="applyFilters()">
+            </div>
+            
+            <div class="filter-group">
+                <label>状态:</label>
+                <select id="statusFilter" onchange="applyFilters()">
+                    <option value="all">全部</option>
+                    <option value="todo">待办</option>
+                    <option value="progress">进行中</option>
+                    <option value="blocked">阻塞</option>
+                    <option value="done">已完成</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>优先级:</label>
+                <select id="priorityFilter" onchange="applyFilters()">
+                    <option value="all">全部</option>
+                    <option value="P0">P0 紧急重要</option>
+                    <option value="P1">P1 重要</option>
+                    <option value="P2">P2 普通</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>负责人:</label>
+                <select id="assigneeFilter" onchange="applyFilters()">
+                    <option value="all">全部</option>
+                </select>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="filter-btn" onclick="clearFilters()">清空筛选</button>
+                <span class="result-count" id="resultCount">显示 0/0 任务</span>
+            </div>
+        </div>
+
         <!-- 统计卡片 -->
         <div class="stats">
             <div class="stat-card done">
@@ -40,28 +81,58 @@
             </div>
         </div>
 
+        <!-- 批量操作栏 -->
+        <div class="batch-actions" id="batchActions" style="display: none;">
+            <span class="selected-count" id="selectedCount">已选择 0 个任务</span>
+            <button class="batch-btn" onclick="batchUpdateStatus('todo')">设为待办</button>
+            <button class="batch-btn" onclick="batchUpdateStatus('progress')">设为进行中</button>
+            <button class="batch-btn" onclick="batchUpdateStatus('done')">设为完成</button>
+            <button class="batch-btn danger" onclick="batchDelete()">删除</button>
+            <button class="batch-btn" onclick="cancelBatch()">取消</button>
+        </div>
+
         <!-- 进行中任务 -->
         <div class="tasks-section">
-            <h2>🔄 进行中任务</h2>
+            <div class="section-header">
+                <h2>🔄 进行中任务</h2>
+                <label class="batch-select">
+                    <input type="checkbox" onchange="toggleSectionSelect('progress', this.checked)"> 全选
+                </label>
+            </div>
             <div id="progressTasks" class="task-list"></div>
         </div>
 
         <!-- 待办任务 -->
         <div class="tasks-section">
-            <h2>🆕 待办任务</h2>
+            <div class="section-header">
+                <h2>🆕 待办任务</h2>
+                <label class="batch-select">
+                    <input type="checkbox" onchange="toggleSectionSelect('todo', this.checked)"> 全选
+                </label>
+            </div>
             <div id="todoTasks" class="task-list"></div>
-        </div>
-
-        <!-- 已完成任务 -->
-        <div class="tasks-section">
-            <h2>✅ 已完成任务</h2>
-            <div id="doneTasks" class="task-list"></div>
         </div>
 
         <!-- 阻塞任务 -->
         <div class="tasks-section">
-            <h2>⏸️ 阻塞任务</h2>
+            <div class="section-header">
+                <h2>⏸️ 阻塞任务</h2>
+                <label class="batch-select">
+                    <input type="checkbox" onchange="toggleSectionSelect('blocked', this.checked)"> 全选
+                </label>
+            </div>
             <div id="blockedTasks" class="task-list"></div>
+        </div>
+
+        <!-- 已完成任务 -->
+        <div class="tasks-section">
+            <div class="section-header">
+                <h2>✅ 已完成任务</h2>
+                <label class="batch-select">
+                    <input type="checkbox" onchange="toggleSectionSelect('done', this.checked)"> 全选
+                </label>
+            </div>
+            <div id="doneTasks" class="task-list"></div>
         </div>
 
         <!-- 页脚 -->
