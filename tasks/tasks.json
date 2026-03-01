@@ -130,15 +130,29 @@
       "id": "T009",
       "title": "智能提醒功能开发",
       "priority": "P0",
-      "status": "progress",
-      "progress": 30,
+      "status": "done",
+      "progress": 100,
       "description": "开发智能提醒功能，支持飞书/邮件通知，截止前提醒，超时告警。",
       "startTime": "2026-03-01 12:58",
-      "estimatedTime": "30 分钟",
+      "completedTime": "2026-03-01 13:05",
+      "assignee": "狗蛋",
+      "retryCount": 0,
+      "order": 6
+    },
+    {
+      "id": "T010",
+      "title": "v1.2 功能开发（任务依赖 + 评论日志）",
+      "priority": "P0",
+      "status": "progress",
+      "progress": 40,
+      "description": "开发任务依赖关系管理和评论日志功能。",
+      "startTime": "2026-03-01 13:05",
+      "estimatedTime": "40 分钟",
       "assignee": "狗蛋",
       "retryCount": 0,
       "deadline": "2026-03-01 14:00",
-      "order": 6
+      "dependencies": ["T009"],
+      "order": 7
     }
   ],
   "taskOrder": ["T004", "T005", "T006", "T007", "T008", "T009"],

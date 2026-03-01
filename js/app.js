@@ -10,8 +10,16 @@ let filters = {
     assignee: 'all'
 };
 
+// 初始化全局管理器
+window.dependencyManager = new TaskDependencyManager();
+window.commentManager = new TaskCommentManager();
+
 // 页面加载时获取任务
-document.addEventListener('DOMContentLoaded', loadTasks);
+document.addEventListener('DOMContentLoaded', () => {
+    loadTasks();
+    window.commentManager.load(); // 加载评论和日志
+    window.notificationManager = new NotificationManager(); // 启动通知服务
+});
 
 // 加载任务数据
 async function loadTasks() {

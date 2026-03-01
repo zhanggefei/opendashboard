@@ -636,3 +636,322 @@ input:checked + .toggle-slider {
 input:checked + .toggle-slider:before {
     transform: translateX(24px);
 }
+
+/* 信息按钮 */
+.info-btn {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.info-btn:hover {
+    background: #bfdbfe;
+}
+
+/* 模态框 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* 标签页 */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.tab.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 评论区 */
+.add-comment {
+    margin-bottom: 20px;
+}
+
+.add-comment textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.add-comment button {
+    margin-top: 10px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.comments-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    padding: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #333;
+}
+
+.comment-time {
+    font-size: 12px;
+    color: #999;
+}
+
+.comment-delete {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.comment-content {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.comment-actions {
+    margin-top: 10px;
+}
+
+.comment-reply-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.reply-input {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f9fafb;
+    border-radius: 6px;
+}
+
+.reply-input textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.reply-input button {
+    margin-top: 5px;
+    padding: 6px 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-replies {
+    margin-top: 10px;
+    padding-left: 20px;
+    border-left: 2px solid #e5e7eb;
+}
+
+.comment-reply {
+    padding: 10px;
+    margin-top: 10px;
+    background: #f9fafb;
+    border-radius: 6px;
+}
+
+/* 日志时间轴 */
+.logs-timeline {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.log-item {
+    display: flex;
+    gap: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.log-time {
+    font-size: 12px;
+    color: #999;
+    min-width: 120px;
+}
+
+.log-content {
+    flex: 1;
+}
+
+.log-action {
+    font-weight: 600;
+    color: #333;
+    margin-right: 10px;
+}
+
+.log-details {
+    color: #666;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+.log-author {
+    color: #999;
+    font-size: 12px;
+}
+
+/* 依赖关系图 */
+.dependency-graph {
+    margin-top: 15px;
+}
+
+.dependency-section {
+    margin-bottom: 20px;
+}
+
+.dependency-section h4 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.dependency-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f9fafb;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.dependency-item.pending {
+    border-left: 3px solid #f59e0b;
+}
+
+.dependency-item.completed {
+    border-left: 3px solid #10b981;
+}
+
+.dependency-task {
+    font-weight: 500;
+    color: #333;
+}
+
+.dependency-status {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.dependency-selector {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dependency-selector select {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.dependency-selector button {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
