@@ -110,20 +110,12 @@ class TaskTemplateManager {
         
         // 创建子任务
         if (template.subtasks && template.subtasks.length > 0) {
-            const subtaskIds = [];
             template.subtasks.forEach(st => {
-                const newSubtask = {
-                    ...st,
-                    id: `st_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-                };
-                subtaskIds.push(newSubtask.id);
-                
-                // 添加到子任务管理器
                 if (window.subtaskManager) {
                     window.subtaskManager.createSubtask(newTask.id, {
-                        title: newSubtask.title,
-                        description: newSubtask.description,
-                        priority: newSubtask.priority
+                        title: st.title,
+                        description: st.description,
+                        priority: st.priority
                     });
                 }
             });
@@ -134,40 +126,6 @@ class TaskTemplateManager {
         this.save();
         
         return newTask;
-    }
-
-    // 导出模板
-    exportTemplate(templateId) {
-        const template = this.getTemplate(templateId);
-        if (!template) return null;
-        
-        const exportData = JSON.stringify(template, null, 2);
-        const blob = new Blob([exportData], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `template_${template.name}.json`;
-        link.click();
-    }
-
-    // 导入模板
-    importTemplate(jsonData) {
-        try {
-            const template = JSON.parse(jsonData);
-            if (!template.id || !template.name) {
-                throw new Error('无效的模板格式');
-            }
-            
-            template.id = `tpl_${Date.now()}`;
-            template.importedTime = new Date().toISOString();
-            
-            this.templates.push(template);
-            this.save();
-            return template;
-        } catch (e) {
-            console.error('导入模板失败:', e);
-            alert('导入失败：' + e.message);
-            return null;
-        }
     }
 
     // 保存
@@ -201,7 +159,6 @@ function showTemplatesModal() {
             <div class="modal-body">
                 <div class="template-actions">
                     <button onclick="showCreateTemplateForm()">➕ 新建模板</button>
-                    <button onclick="importTemplateFile()">📥 导入模板</button>
                 </div>
                 
                 ${templates.length === 0 ? 
@@ -217,11 +174,9 @@ function showTemplatesModal() {
                                 <div class="template-meta">
                                     <span>🎯 ${tpl.baseTask.priority}</span>
                                     <span>⏱️ ${tpl.baseTask.estimatedTime || '未设置'}</span>
-                                    ${tpl.subtasks?.length > 0 ? `<span>🌳 ${tpl.subtasks.length} 个子任务</span>` : ''}
                                 </div>
                                 <div class="template-actions">
                                     <button class="btn-primary" onclick="useTemplate('${tpl.id}')">使用此模板</button>
-                                    <button class="btn-secondary" onclick="editTemplate('${tpl.id}')">编辑</button>
                                     <button class="btn-danger" onclick="deleteTemplate('${tpl.id}')">删除</button>
                                 </div>
                             </div>
@@ -250,10 +205,6 @@ function showCreateTemplateForm() {
                     <div class="form-group">
                         <label>模板名称 *</label>
                         <input type="text" name="name" required placeholder="例如：客户分析报告模板">
-                    </div>
-                    <div class="form-group">
-                        <label>描述</label>
-                        <textarea name="description" placeholder="模板描述..."></textarea>
                     </div>
                     <div class="form-group">
                         <label>任务标题 *</label>
@@ -288,77 +239,31 @@ function showCreateTemplateForm() {
 // 提交模板表单
 function submitTemplateForm(event) {
     event.preventDefault();
-    
     const form = event.target;
     const formData = new FormData(form);
     
-    const templateData = {
+    window.templateManager?.createTemplate({
         name: formData.get('name'),
-        description: formData.get('description'),
         title: formData.get('title'),
         priority: formData.get('priority'),
         estimatedTime: formData.get('estimatedTime')
-    };
+    });
     
-    window.templateManager?.createTemplate(templateData);
-    
-    // 关闭表单，刷新模板列表
     const modal = document.querySelector('.template-form-modal');
-    if (modal) {
-        modal.remove();
-        showTemplatesModal();
-    }
-    
+    if (modal) { modal.remove(); showTemplatesModal(); }
     alert('模板创建成功！');
 }
 
 // 使用模板创建任务
 function useTemplate(templateId) {
-    const template = window.templateManager?.getTemplate(templateId);
-    if (!template) return;
-    
-    if (confirm(`确定要使用模板 "${template.name}" 创建任务吗？`)) {
+    if (confirm('确定要使用此模板创建任务吗？')) {
         const newTask = window.templateManager?.createTaskFromTemplate(templateId);
-        
         if (newTask && window.tasksData?.tasks) {
             window.tasksData.tasks.unshift(newTask);
-            
-            // 保存并刷新
-            if (window.saveTasks) {
-                window.saveTasks();
-            }
-            
-            // 关闭模态框
             const modal = document.querySelector('.templates-modal');
-            if (modal) {
-                modal.remove();
-            }
-            
+            if (modal) modal.remove();
             alert(`任务已创建！ID: ${newTask.id}`);
         }
-    }
-}
-
-// 编辑模板
-function editTemplate(templateId) {
-    const template = window.templateManager?.getTemplate(templateId);
-    if (!template) return;
-    
-    const newName = prompt('编辑模板名称:', template.name);
-    if (newName === null) return;
-    
-    const newDesc = prompt('编辑描述:', template.description);
-    
-    window.templateManager?.updateTemplate(templateId, {
-        name: newName,
-        description: newDesc !== null ? newDesc : template.description
-    });
-    
-    // 刷新
-    const modal = document.querySelector('.templates-modal');
-    if (modal) {
-        modal.remove();
-        showTemplatesModal();
     }
 }
 
@@ -366,52 +271,14 @@ function editTemplate(templateId) {
 function deleteTemplate(templateId) {
     if (confirm('确定要删除这个模板吗？')) {
         window.templateManager?.deleteTemplate(templateId);
-        
-        // 刷新
         const modal = document.querySelector('.templates-modal');
-        if (modal) {
-            modal.remove();
-            showTemplatesModal();
-        }
+        if (modal) { modal.remove(); showTemplatesModal(); }
     }
 }
 
-// 导入模板文件
-function importTemplateFile() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const result = window.templateManager?.importTemplate(event.target.result);
-            if (result) {
-                alert('模板导入成功！');
-                
-                // 刷新
-                const modal = document.querySelector('.templates-modal');
-                if (modal) {
-                    modal.remove();
-                    showTemplatesModal();
-                }
-            }
-        };
-        reader.readAsText(file);
-    };
-    
-    input.click();
-}
-
-// 全局实例
 window.TaskTemplateManager = TaskTemplateManager;
 window.showTemplatesModal = showTemplatesModal;
 window.useTemplate = useTemplate;
 window.deleteTemplate = deleteTemplate;
-window.editTemplate = editTemplate;
 window.showCreateTemplateForm = showCreateTemplateForm;
 window.submitTemplateForm = submitTemplateForm;
-window.importTemplateFile = importTemplateFile;
