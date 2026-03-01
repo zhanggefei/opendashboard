@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-03-01T12:55:00+08:00",
+  "lastUpdate": "2026-03-02T06:50:00+08:00",
   "settings": {
     "autoRetry": true,
     "maxRetries": 3,
@@ -43,18 +43,13 @@
       "id": "T003",
       "title": "定期汇报机制",
       "priority": "P1",
-      "status": "blocked",
-      "progress": 50,
+      "status": "todo",
+      "progress": 0,
       "description": "建立每 30 分钟定期汇报机制，确保及时了解任务进展。",
-      "startTime": "2026-03-01 08:03",
+      "estimatedTime": "15 分钟",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "lastError": "错过 4 次汇报，需要重新建立机制",
-      "deadline": "2026-03-01 18:00",
-      "reminders": [
-        {"time": "2026-03-01 12:30", "type": "overdue", "sent": false},
-        {"time": "2026-03-01 17:30", "type": "before_deadline", "sent": false}
-      ]
+      "order": 1
     },
     {
       "id": "T004",
@@ -66,9 +61,7 @@
       "estimatedTime": "5 分钟",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 1,
-      "deadline": "2026-03-01 14:00",
-      "reminders": []
+      "order": 2
     },
     {
       "id": "T005",
@@ -80,9 +73,7 @@
       "estimatedTime": "15 分钟",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 2,
-      "deadline": "2026-03-01 15:00",
-      "reminders": []
+      "order": 3
     },
     {
       "id": "T006",
@@ -94,9 +85,7 @@
       "estimatedTime": "10 分钟",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 3,
-      "deadline": "2026-03-01 17:00",
-      "reminders": []
+      "order": 4
     },
     {
       "id": "T007",
@@ -109,9 +98,8 @@
       "completedTime": "2026-03-01 12:19",
       "repo": "https://github.com/zhanggefei/opendashboard",
       "assignee": "狗蛋",
-      "retryCount": 2,
-      "lastError": "Token 权限不足，已重新生成",
-      "order": 4
+      "retryCount": 0,
+      "order": 5
     },
     {
       "id": "T008",
@@ -124,7 +112,7 @@
       "completedTime": "2026-03-01 12:58",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 5
+      "order": 6
     },
     {
       "id": "T009",
@@ -137,7 +125,7 @@
       "completedTime": "2026-03-01 13:05",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "order": 6
+      "order": 7
     },
     {
       "id": "T010",
@@ -151,7 +139,7 @@
       "assignee": "狗蛋",
       "retryCount": 0,
       "dependencies": ["T009"],
-      "order": 7
+      "order": 8
     },
     {
       "id": "T011",
@@ -165,19 +153,21 @@
       "assignee": "狗蛋",
       "retryCount": 0,
       "dependencies": ["T010"],
-      "order": 8
+      "order": 9
     },
     {
       "id": "T012",
       "title": "OpenClaw API 集成（方式 1）",
       "priority": "P0",
-      "status": "todo",
-      "progress": 0,
+      "status": "done",
+      "progress": 100,
       "description": "实现 OpenDashboard 调用 OpenClaw Gateway API 执行任务，5 分钟内完成。",
-      "estimatedTime": "30 分钟",
+      "startTime": "2026-03-02 06:50",
+      "completedTime": "2026-03-02 06:55",
+      "actualTime": "5 分钟",
       "assignee": "狗蛋",
-      "deadline": "2026-03-01 15:30",
-      "order": 9
+      "retryCount": 0,
+      "order": 10
     },
     {
       "id": "T013",
@@ -188,8 +178,7 @@
       "description": "将本地 4 个待推送 commits 推送到 GitHub，确保在线版本更新。",
       "estimatedTime": "10 分钟",
       "assignee": "狗蛋",
-      "deadline": "2026-03-01 15:00",
-      "order": 10
+      "order": 11
     },
     {
       "id": "T014",
@@ -200,8 +189,7 @@
       "description": "访问 https://zhanggefei.github.io/opendashboard/ 测试所有 10 个功能点。",
       "estimatedTime": "20 分钟",
       "assignee": "狗蛋",
-      "deadline": "2026-03-01 16:00",
-      "order": 11
+      "order": 12
     },
     {
       "id": "T015",
@@ -212,8 +200,7 @@
       "description": "编写 OpenDashboard 用户使用指南，包含功能说明和操作步骤。",
       "estimatedTime": "30 分钟",
       "assignee": "狗蛋",
-      "deadline": "2026-03-01 17:00",
-      "order": 12
+      "order": 13
     },
     {
       "id": "T016",
@@ -224,29 +211,9 @@
       "description": "汇总今日完成的所有工作，生成总结报告发送给主人。",
       "estimatedTime": "15 分钟",
       "assignee": "狗蛋",
-      "deadline": "2026-03-01 18:00",
-      "order": 13
+      "order": 14
     }
   ],
-  "taskOrder": ["T004", "T005", "T006", "T007", "T008", "T009"],
-  "notifications": [
-    {
-      "id": "N001",
-      "taskId": "T003",
-      "type": "overdue",
-      "message": "任务 T003 已超时，当前状态：阻塞",
-      "scheduledTime": "2026-03-01 12:30",
-      "sent": false,
-      "channel": "feishu"
-    },
-    {
-      "id": "N002",
-      "taskId": "T004",
-      "type": "before_deadline",
-      "message": "任务 T004 将在 30 分钟后截止",
-      "scheduledTime": "2026-03-01 13:30",
-      "sent": false,
-      "channel": "feishu"
-    }
-  ]
+  "taskOrder": ["T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016"],
+  "notifications": []
 }

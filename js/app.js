@@ -1,4 +1,4 @@
-// OpenDashboard 应用逻辑 v1.1 - 筛选搜索 + 批量操作
+// OpenDashboard 应用逻辑 v1.2 - OpenClaw API 集成
 
 let tasks = [];
 let taskOrder = [];
@@ -18,6 +18,69 @@ window.analyticsManager = new DashboardAnalytics();
 window.templateManager = new TaskTemplateManager();
 window.timeTracker = new TimeTracker();
 window.openclawIntegration = new OpenClawIntegration();
+
+// ============== OpenClaw API 集成 ==============
+
+class OpenClawIntegration {
+    constructor() {
+        this.apiEndpoint = 'http://localhost:18789';
+        this.gatewayStatus = null;
+    }
+    
+    // 检查 OpenClaw Gateway 状态
+    async checkGatewayStatus() {
+        try {
+            const response = await fetch(`${this.apiEndpoint}/status`);
+            if (response.ok) {
+                const data = await response.json();
+                this.gatewayStatus = { online: true, ...data };
+                return this.gatewayStatus;
+            }
+        } catch (error) {
+            this.gatewayStatus = { online: false, error: error.message };
+        }
+        return this.gatewayStatus;
+    }
+    
+    // 执行任务
+    async executeTask(task) {
+        const status = await this.checkGatewayStatus();
+        if (!status.online) {
+            throw new Error('OpenClaw Gateway 未运行，请先启动服务');
+        }
+        
+        const response = await fetch(`${this.apiEndpoint}/execute`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                taskId: task.id,
+                taskTitle: task.title,
+                taskDescription: task.description,
+                action: 'auto'
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API 请求失败：${response.status}`);
+        }
+        
+        return await response.json();
+    }
+    
+    // 发送消息到飞书
+    async sendFeishuMessage(message) {
+        const response = await fetch(`${this.apiEndpoint}/message/send`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                channel: 'feishu',
+                message: message
+            })
+        });
+        
+        return await response.json();
+    }
+}
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
@@ -744,3 +807,152 @@ function handleDragEnd(e) {
 setInterval(() => {
     loadTasks();
 }, 5 * 60 * 1000);
+
+// ============== OpenClaw 集成功能 ==============
+
+// 显示 OpenClaw 集成面板
+function showOpenClawIntegration(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>🤖 OpenClaw 自动化执行</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="openclaw-status" id="gatewayStatus">
+                    <p>检查 Gateway 状态中...</p>
+                </div>
+                
+                <div class="task-info">
+                    <h4>任务信息</h4>
+                    <p><strong>ID:</strong> ${task.id}</p>
+                    <p><strong>标题:</strong> ${task.title}</p>
+                    <p><strong>描述:</strong> ${task.description}</p>
+                    <p><strong>状态:</strong> ${task.status}</p>
+                    <p><strong>优先级:</strong> ${task.priority}</p>
+                </div>
+                
+                <div class="openclaw-actions">
+                    <button class="btn-primary" onclick="executeWithOpenClaw('${task.id}')">
+                        🚀 立即执行
+                    </button>
+                    <button class="btn-secondary" onclick="checkGatewayStatus()">
+                        🔄 刷新状态
+                    </button>
+                </div>
+                
+                <div class="openclaw-help">
+                    <h4>📖 使用说明</h4>
+                    <ol>
+                        <li>确保 OpenClaw Gateway 正在运行</li>
+                        <li>点击"立即执行"将任务发送给 OpenClaw</li>
+                        <li>OpenClaw 会自动执行任务并更新状态</li>
+                        <li>执行完成后任务状态会自动同步</li>
+                    </ol>
+                    
+                    <h4>🔧 启动 Gateway</h4>
+                    <pre><code>openclaw gateway start</code></pre>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // 自动检查 Gateway 状态
+    checkGatewayStatus();
+}
+
+// 检查 Gateway 状态
+async function checkGatewayStatus() {
+    const statusDiv = document.getElementById('gatewayStatus');
+    const integration = window.openclawIntegration;
+    
+    try {
+        const status = await integration.checkGatewayStatus();
+        
+        if (status.online) {
+            statusDiv.innerHTML = `
+                <div class="status-indicator online">
+                    <span class="status-dot">🟢</span>
+                    <span>OpenClaw Gateway 在线</span>
+                    <span class="status-detail">版本：${status.version || '未知'}</span>
+                </div>
+            `;
+        } else {
+            statusDiv.innerHTML = `
+                <div class="status-indicator offline">
+                    <span class="status-dot">🔴</span>
+                    <span>OpenClaw Gateway 离线</span>
+                    <span class="status-detail">${status.error || '无法连接'}</span>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>请先启动 Gateway：</strong>
+                    <pre><code>openclaw gateway start</code></pre>
+                </div>
+            `;
+        }
+    } catch (error) {
+        statusDiv.innerHTML = `
+            <div class="status-indicator offline">
+                <span class="status-dot">🔴</span>
+                <span>检查失败</span>
+                <span class="status-detail">${error.message}</span>
+            </div>
+        `;
+    }
+}
+
+// 使用 OpenClaw 执行任务
+async function executeWithOpenClaw(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    const integration = window.openclawIntegration;
+    
+    try {
+        // 更新任务状态为执行中
+        task.status = 'progress';
+        task.progress = 0;
+        saveTasks();
+        applyFilters();
+        
+        // 调用 OpenClaw API
+        const result = await integration.executeTask(task);
+        
+        // 更新任务状态
+        task.status = result.status || 'done';
+        task.progress = 100;
+        task.completedTime = new Date().toLocaleString('zh-CN', {
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        task.result = result.data;
+        
+        saveTasks();
+        applyFilters();
+        
+        // 显示成功消息
+        alert(`✅ 任务执行成功！\n\n状态：${task.status}\n结果：${JSON.stringify(result.data, null, 2)}`);
+        
+        // 关闭模态框
+        const modal = document.querySelector('.modal');
+        if (modal) modal.remove();
+        
+    } catch (error) {
+        // 执行失败，恢复状态
+        task.status = 'blocked';
+        task.lastError = error.message;
+        saveTasks();
+        applyFilters();
+        
+        alert(`❌ 任务执行失败\n\n错误信息：${error.message}\n\n请检查 OpenClaw Gateway 是否正常运行`);
+    }
+}
