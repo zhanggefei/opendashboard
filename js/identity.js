@@ -131,7 +131,9 @@ function renderIdentities() {
 function switchIdentity(identityId) {
     window.identityManager.switchIdentity(identityId);
     renderIdentities();
-    renderTasks();
+    setTimeout(() => {
+        renderTasks();
+    }, 100);
 }
 
 // 渲染任务列表
@@ -141,6 +143,8 @@ function renderTasks() {
 
     const identity = window.identityManager.getCurrentIdentity();
     if (!identity) return;
+
+    console.log('当前身份:', identity.id, '任务数:', identity.tasks.length);
 
     // 紧急任务优先显示
     const urgentTasks = identity.tasks.filter(t => t.priority === 'P0');
@@ -167,6 +171,9 @@ function renderTasks() {
     }
 
     container.innerHTML = html;
+    
+    // 更新身份卡片上的任务数量显示
+    renderIdentities();
 }
 
 // 渲染任务卡片
@@ -230,6 +237,8 @@ function completeTask(taskId) {
 
 // 添加示例任务
 function addSampleTasks() {
+    console.log('添加示例任务...');
+    
     // CRM 数据分析师任务
     window.identityManager.addTask('crm_analyst', {
         id: 'crm_001',
@@ -239,6 +248,7 @@ function addSampleTasks() {
         status: 'done',
         deadline: '2026-03-01'
     });
+    console.log('CRM 分析师任务数:', window.identityManager.identities.find(i => i.id === 'crm_analyst').tasks.length);
 
     // OpenDashboard 开发者任务
     window.identityManager.addTask('developer', {
@@ -249,6 +259,7 @@ function addSampleTasks() {
         status: 'progress',
         deadline: '2026-03-01'
     });
+    console.log('开发者任务数:', window.identityManager.identities.find(i => i.id === 'developer').tasks.length);
 
     // 30 天优化计划任务
     window.identityManager.addTask('optimizer', {
@@ -259,6 +270,7 @@ function addSampleTasks() {
         status: 'todo',
         deadline: '2026-03-02'
     });
+    console.log('优化计划任务数:', window.identityManager.identities.find(i => i.id === 'optimizer').tasks.length);
 }
 
 // 初始化
