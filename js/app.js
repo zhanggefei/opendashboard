@@ -15,12 +15,16 @@ window.dependencyManager = new TaskDependencyManager();
 window.commentManager = new TaskCommentManager();
 window.subtaskManager = new SubtaskManager();
 window.analyticsManager = new DashboardAnalytics();
+window.templateManager = new TaskTemplateManager();
+window.timeTracker = new TimeTracker();
+window.openclawIntegration = new OpenClawIntegration();
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
     window.commentManager.load(); // 加载评论和日志
     window.subtaskManager.load(); // 加载子任务
+    window.timeTracker.load(); // 加载时间追踪
     window.notificationManager = new NotificationManager(); // 启动通知服务
 });
 
@@ -350,6 +354,9 @@ function renderTaskCard(task) {
                 <button class="action-btn info-btn" onclick="showDependencyModal('${task.id}')" title="依赖关系">🔗</button>
                 <button class="action-btn info-btn" onclick="showCommentsModal('${task.id}')" title="评论日志">💬</button>
                 <button class="action-btn info-btn" onclick="showSubtasksModal('${task.id}')" title="子任务">🌳</button>
+                <button class="action-btn info-btn" onclick="showTemplatesModal()" title="任务模板">📋</button>
+                <button class="action-btn info-btn" onclick="showTimeStatsModal()" title="时间统计">⏱️</button>
+                <button class="action-btn info-btn" onclick="showOpenClawIntegration('${task.id}')" title="OpenClaw 自动化">🤖</button>
             </div>
         </div>
     `;
