@@ -1,173 +1,165 @@
-// 时间追踪模块
+// 任务时间追踪 v1.0
 
 class TimeTracker {
     constructor() {
-        this.trackingSessions = {};
-        this.timeLogs = {};
+        this.tracking = {};
+        this.history = [];
         this.load();
     }
-
+    
+    load() {
+        const saved = localStorage.getItem('opendashboard_timetracking');
+        if (saved) {
+            const data = JSON.parse(saved);
+            this.tracking = data.tracking || {};
+            this.history = data.history || [];
+        }
+    }
+    
+    save() {
+        localStorage.setItem('opendashboard_timetracking', JSON.stringify({
+            tracking: this.tracking,
+            history: this.history
+        }));
+    }
+    
     // 开始追踪
     startTracking(taskId) {
-        if (this.trackingSessions[taskId]) return false;
+        if (this.tracking[taskId]) {
+            alert('此任务已在追踪中');
+            return;
+        }
         
-        this.trackingSessions[taskId] = {
-            taskId,
+        this.tracking[taskId] = {
             startTime: Date.now(),
-            pauses: []
+            totalTime: 0
         };
-        
         this.save();
-        return true;
+        this.updateUI();
     }
-
+    
     // 停止追踪
     stopTracking(taskId) {
-        const session = this.trackingSessions[taskId];
-        if (!session) return null;
+        if (!this.tracking[taskId]) return;
         
         const endTime = Date.now();
-        const totalTime = this.calculateSessionTime(session, endTime);
+        const duration = endTime - this.tracking[taskId].startTime;
         
-        if (!this.timeLogs[taskId]) this.timeLogs[taskId] = [];
-        
-        this.timeLogs[taskId].push({
-            id: `tl_${Date.now()}`,
-            startTime: session.startTime,
+        this.history.push({
+            taskId: taskId,
+            startTime: this.tracking[taskId].startTime,
             endTime: endTime,
-            totalTime: totalTime
+            duration: duration,
+            date: new Date().toISOString()
         });
         
-        delete this.trackingSessions[taskId];
+        delete this.tracking[taskId];
         this.save();
-        
-        return { taskId, totalTime, formattedTime: this.formatTime(totalTime) };
+        this.updateUI();
     }
-
-    // 计算时间
-    calculateSessionTime(session, endTime = Date.now()) {
-        let total = endTime - session.startTime;
-        session.pauses.forEach(pause => {
-            if (pause.end) total -= (pause.end - pause.start);
-        });
-        return Math.max(0, total);
-    }
-
-    // 获取当前追踪时间
-    getCurrentTrackingTime(taskId) {
-        const session = this.trackingSessions[taskId];
-        if (!session) return 0;
-        return this.calculateSessionTime(session);
-    }
-
-    // 获取总时间
+    
+    // 获取任务总耗时
     getTotalTime(taskId) {
-        const logs = this.timeLogs[taskId] || [];
-        const current = this.getCurrentTrackingTime(taskId);
-        return logs.reduce((sum, log) => sum + log.totalTime, 0) + current;
+        const taskHistory = this.history.filter(h => h.taskId === taskId);
+        const total = taskHistory.reduce((sum, h) => sum + h.duration, 0);
+        
+        // 如果正在追踪，加上当前时间
+        if (this.tracking[taskId]) {
+            return total + (Date.now() - this.tracking[taskId].startTime);
+        }
+        
+        return total;
     }
-
+    
     // 格式化时间
     formatTime(ms) {
-        const minutes = Math.floor(ms / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        return `${minutes}分${seconds}秒`;
+        const hours = Math.floor(ms / (1000 * 60 * 60));
+        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+        
+        if (hours > 0) {
+            return `${hours}小时 ${minutes}分钟`;
+        } else if (minutes > 0) {
+            return `${minutes}分钟 ${seconds}秒`;
+        } else {
+            return `${seconds}秒`;
+        }
     }
-
-    // 获取统计
-    getAllTimeStats() {
-        const stats = {};
-        Object.entries(this.timeLogs).forEach(([taskId, logs]) => {
-            stats[taskId] = {
-                totalTime: logs.reduce((sum, log) => sum + log.totalTime, 0),
-                sessions: logs.length
-            };
-        });
-        Object.entries(this.trackingSessions).forEach(([taskId]) => {
-            if (!stats[taskId]) stats[taskId] = { totalTime: 0, sessions: 0 };
-            stats[taskId].tracking = true;
-            stats[taskId].currentSession = this.getCurrentTrackingTime(taskId);
-        });
-        return stats;
-    }
-
-    // 保存/加载
-    save() {
-        localStorage.setItem('timeTrackingSessions', JSON.stringify(this.trackingSessions));
-        localStorage.setItem('timeLogs', JSON.stringify(this.timeLogs));
-    }
-
-    load() {
-        try {
-            this.trackingSessions = JSON.parse(localStorage.getItem('timeTrackingSessions')) || {};
-            this.timeLogs = JSON.parse(localStorage.getItem('timeLogs')) || {};
-        } catch (e) { console.error('加载时间追踪失败:', e); }
-    }
-}
-
-// 渲染时间追踪器
-function renderTimeTracker(taskId) {
-    const isTracking = !!window.timeTracker?.trackingSessions?.[taskId];
-    const totalTime = window.timeTracker?.getTotalTime(taskId) || 0;
     
-    return `
-        <div class="time-tracker">
-            <span class="time-display">${isTracking ? '🔴 追踪中' : '⏱️'} ${window.timeTracker.formatTime(totalTime)}</span>
-            ${isTracking ? 
-                `<button onclick="stopTracking('${taskId}')">⏹️ 停止</button>` : 
-                `<button onclick="startTracking('${taskId}')">▶️ 开始</button>`
-            }
-        </div>
-    `;
-}
-
-function startTracking(taskId) { window.timeTracker?.startTracking(taskId); }
-function stopTracking(taskId) {
-    const result = window.timeTracker?.stopTracking(taskId);
-    if (result) alert(`本次耗时：${result.formattedTime}`);
-}
-
-function showTimeStatsModal() {
-    const stats = window.timeTracker?.getAllTimeStats() || {};
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>⏱️ 时间统计</h3>
-                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
-            </div>
-            <div class="modal-body">
-                ${Object.keys(stats).length === 0 ? '<div class="empty-state">暂无数据</div>' : 
-                Object.entries(stats).map(([id, s]) => `
-                    <div class="time-stat">
-                        <strong>${id}</strong>
-                        <span>总计：${window.timeTracker.formatTime(s.totalTime)}</span>
-                        ${s.tracking ? '<span class="tracking-badge">🔴 追踪中</span>' : ''}
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-window.TimeTracker = TimeTracker;
-window.renderTimeTracker = renderTimeTracker;
-window.startTracking = startTracking;
-window.stopTracking = stopTracking;
-window.showTimeStatsModal = showTimeStatsModal;
-
-// 每秒更新追踪显示（不刷新页面）
-setInterval(() => {
-    if (window.timeTracker) {
-        // 更新所有追踪中的任务显示
-        Object.keys(window.timeTracker.trackingSessions).forEach(taskId => {
-            const el = document.querySelector(`.time-tracker[data-task="${taskId}"]`);
-            if (el) {
-                const time = window.timeTracker.getCurrentTrackingTime(taskId);
-                el.querySelector('.time-display').textContent = window.timeTracker.formatTime(time);
-            }
-        });
+    // 检查任务是否在追踪中
+    isTracking(taskId) {
+        return !!this.tracking[taskId];
     }
-}, 1000);
+    
+    // 更新 UI 显示
+    updateUI() {
+        // 重新渲染任务列表以显示时间追踪状态
+        if (window.applyFilters) {
+            window.applyFilters();
+        }
+    }
+    
+    // 显示时间统计
+    showStats() {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 700px;">
+                <div class="modal-header">
+                    <h3>⏱️ 时间追踪统计</h3>
+                    <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="time-stats-grid">
+                        <div class="time-stat-card">
+                            <h4>今日总耗时</h4>
+                            <p class="time-stat-value">${this.formatTime(this.getTodayTotal())}</p>
+                        </div>
+                        <div class="time-stat-card">
+                            <h4>本周总耗时</h4>
+                            <p class="time-stat-value">${this.formatTime(this.getWeekTotal())}</p>
+                        </div>
+                        <div class="time-stat-card">
+                            <h4>任务总数</h4>
+                            <p class="time-stat-value">${this.history.length}</p>
+                        </div>
+                    </div>
+                    
+                    <h4>最近记录</h4>
+                    <div class="time-history">
+                        ${this.history.slice(-10).reverse().map(h => {
+                            const task = window.tasks?.find(t => t.id === h.taskId);
+                            return `
+                                <div class="time-history-item">
+                                    <span class="task-id">${h.taskId}</span>
+                                    <span class="task-title">${task?.title || '未知'}</span>
+                                    <span class="time-duration">${this.formatTime(h.duration)}</span>
+                                    <span class="time-date">${new Date(h.startTime).toLocaleString('zh-CN')}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    getTodayTotal() {
+        const today = new Date().toDateString();
+        return this.history
+            .filter(h => new Date(h.startTime).toDateString() === today)
+            .reduce((sum, h) => sum + h.duration, 0);
+    }
+    
+    getWeekTotal() {
+        const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+        return this.history
+            .filter(h => h.startTime >= weekAgo)
+            .reduce((sum, h) => sum + h.duration, 0);
+    }
+}
+
+// 全局注册
+window.TimeTracker = TimeTracker;

@@ -90,6 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.commentManager.load(); // 加载评论和日志
     window.subtaskManager.load(); // 加载子任务
     window.timeTracker.load(); // 加载时间追踪
+    window.tagManager = new TagManager(); // 初始化标签管理
+    window.bulkOps = new BulkOperationsManager(); // 初始化批量操作
     window.notificationManager = new NotificationManager(); // 启动通知服务
 });
 
