@@ -85,6 +85,7 @@ class OpenClawIntegration {
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
     initDarkMode(); // 初始化深色模式
+    initShortcuts(); // 初始化快捷键
     loadTasks();
     window.commentManager.load(); // 加载评论和日志
     window.subtaskManager.load(); // 加载子任务
@@ -295,17 +296,24 @@ function loadSampleTasks() {
 // 应用筛选
 function applyFilters() {
     // 获取筛选条件
-    filters.search = document.getElementById('searchInput').value.toLowerCase();
+    filters.search = document.getElementById('searchInput').value;
     filters.status = document.getElementById('statusFilter').value;
     filters.priority = document.getElementById('priorityFilter').value;
     filters.assignee = document.getElementById('assigneeFilter').value;
     
     // 筛选任务
     const filteredTasks = tasks.filter(task => {
-        // 搜索筛选
-        if (filters.search && !task.title.toLowerCase().includes(filters.search) && 
-            !task.description.toLowerCase().includes(filters.search)) {
-            return false;
+        // 搜索筛选 (支持模糊搜索)
+        if (filters.search) {
+            const searchLower = filters.search.toLowerCase();
+            const titleMatch = task.title.toLowerCase().includes(searchLower);
+            const descMatch = task.description.toLowerCase().includes(searchLower);
+            const idMatch = task.id.toLowerCase().includes(searchLower);
+            const assigneeMatch = task.assignee && task.assignee.toLowerCase().includes(searchLower);
+            
+            if (!titleMatch && !descMatch && !idMatch && !assigneeMatch) {
+                return false;
+            }
         }
         
         // 状态筛选
@@ -436,7 +444,7 @@ function renderTaskCard(task) {
         </div>
         <div class="task-content">
             <div class="task-header">
-                <span class="task-title">${task.id} - ${task.title}</span>
+                <span class="task-title">${highlightSearch(task.id + ' - ' + task.title)}</span>
                 <span class="status-badge status-${task.status}">${statusLabels[task.status]}</span>
             </div>
             <div class="task-meta">
@@ -454,7 +462,7 @@ function renderTaskCard(task) {
                 <div class="progress-fill" style="width: ${task.progress}%"></div>
             </div>
             ` : ''}
-            <p class="task-desc">${task.description}</p>
+            <p class="task-desc">${highlightSearch(task.description)}</p>
             <div class="task-actions">
                 ${dragHint}
                 ${retryButton}
@@ -811,6 +819,117 @@ function handleDragEnd(e) {
 setInterval(() => {
     loadTasks();
 }, 5 * 60 * 1000);
+
+// ============== 搜索高亮功能 ==============
+
+// 高亮搜索关键词
+function highlightSearch(text) {
+    if (!filters.search) return text;
+    
+    const regex = new RegExp(`(${escapeRegex(filters.search)})`, 'gi');
+    return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+}
+
+// 转义正则表达式特殊字符
+function escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ============== 快捷键支持 ==============
+
+// 快捷键映射
+const shortcuts = {
+    'n': () => showCreateTaskFromTemplate(), // 新建任务
+    's': () => document.getElementById('searchInput').focus(), // 聚焦搜索
+    'r': () => loadTasks(), // 刷新
+    'd': () => toggleDarkMode(), // 深色模式
+    'e': () => showExportModal(), // 导出
+    't': () => showTemplatesModal(), // 模板
+    '?': () => showShortcutsHelp() // 帮助
+};
+
+// 初始化快捷键
+function initShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // 忽略输入框中的按键
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+            // 但保留 ESC 键
+            if (e.key === 'Escape') {
+                e.target.blur();
+                closeAllModals();
+            }
+            return;
+        }
+        
+        // 忽略修饰键组合
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        
+        const key = e.key.toLowerCase();
+        if (shortcuts[key]) {
+            e.preventDefault();
+            shortcuts[key]();
+        }
+    });
+}
+
+// 显示快捷键帮助
+function showShortcutsHelp() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>⌨️ 快捷键帮助</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-list">
+                    <div class="shortcut-item">
+                        <kbd>N</kbd>
+                        <span>新建任务</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>S</kbd>
+                        <span>聚焦搜索框</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>R</kbd>
+                        <span>刷新任务列表</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>D</kbd>
+                        <span>切换深色模式</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>E</kbd>
+                        <span>导出数据</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>T</kbd>
+                        <span>任务模板</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>?</kbd>
+                        <span>显示此帮助</span>
+                    </div>
+                </div>
+                <div class="shortcut-tip">
+                    <p>💡 提示：在输入框中按 ESC 可快速关闭焦点</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// 关闭所有模态框
+function closeAllModals() {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.remove();
+    });
+    closeExportModal();
+}
 
 // ============== 任务模板功能 ==============
 
