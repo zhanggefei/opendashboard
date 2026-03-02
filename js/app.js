@@ -10,15 +10,6 @@ let filters = {
     assignee: 'all'
 };
 
-// 初始化全局管理器
-window.dependencyManager = new TaskDependencyManager();
-window.commentManager = new TaskCommentManager();
-window.subtaskManager = new SubtaskManager();
-window.analyticsManager = new DashboardAnalytics();
-window.templateManager = new TaskTemplateManager();
-window.timeTracker = new TimeTracker();
-window.openclawIntegration = new OpenClawIntegration();
-
 // ============== OpenClaw API 集成 ==============
 
 class OpenClawIntegration {
@@ -86,15 +77,17 @@ class OpenClawIntegration {
 document.addEventListener('DOMContentLoaded', () => {
     initDarkMode(); // 初始化深色模式
     initShortcuts(); // 初始化快捷键
-    loadTasks();
-    window.commentManager.load(); // 加载评论和日志
-    window.subtaskManager.load(); // 加载子任务
-    window.timeTracker.load(); // 加载时间追踪
+    window.dependencyManager = new TaskDependencyManager(); // 初始化依赖管理
+    window.commentManager = new window.CommentManager(); // 加载评论和日志
+    window.subtaskManager = new window.SubtaskManager(); // 加载子任务
+    window.timeTracker = new TimeTracker(); // 加载时间追踪
     window.tagManager = new TagManager(); // 初始化标签管理
     window.bulkOps = new BulkOperationsManager(); // 初始化批量操作
     window.notificationManager = new NotificationManager(); // 启动通知服务
     window.importExport = new ImportExportManager(); // 初始化导入导出
     window.settingsManager = new SettingsManager(); // 初始化设置管理
+    window.activityLogger = new ActivityLogger(); // 初始化活动日志
+    loadTasks();
 });
 
 // 身份管理面板切换
