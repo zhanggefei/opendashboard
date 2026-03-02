@@ -93,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.tagManager = new TagManager(); // 初始化标签管理
     window.bulkOps = new BulkOperationsManager(); // 初始化批量操作
     window.notificationManager = new NotificationManager(); // 启动通知服务
+    window.importExport = new ImportExportManager(); // 初始化导入导出
+    window.settingsManager = new SettingsManager(); // 初始化设置管理
 });
 
 // 身份管理面板切换
