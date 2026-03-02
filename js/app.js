@@ -87,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.importExport = new ImportExportManager(); // 初始化导入导出
     window.settingsManager = new SettingsManager(); // 初始化设置管理
     window.activityLogger = new ActivityLogger(); // 初始化活动日志
+    window.gestureManager = new GestureManager(); // 初始化手势支持
+    window.voiceInput = new VoiceInputManager(); // 初始化语音输入
+    window.voiceInput.showVoiceButton(); // 显示语音按钮
     loadTasks();
 });
 
