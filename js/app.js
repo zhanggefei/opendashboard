@@ -2,6 +2,9 @@
 
 let tasks = [];
 
+// 全局任务变量
+window.tasks = [];
+
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
@@ -17,7 +20,9 @@ async function loadTasks() {
         
         const data = await response.json();
         tasks = data.tasks || [];
+        window.tasks = tasks;
         
+        renderIdentityTabs();
         renderTasks();
         updateStats();
         updateLastUpdate();
@@ -29,6 +34,9 @@ async function loadTasks() {
     }
 }
 
+// 当前选中的身份
+let currentIdentity = 'all';
+
 // 渲染任务列表
 function renderTasks() {
     const taskList = document.getElementById('taskList');
@@ -36,12 +44,22 @@ function renderTasks() {
     
     taskList.innerHTML = '';
     
-    if (tasks.length === 0) {
+    // 按身份筛选
+    let filteredTasks = tasks;
+    if (currentIdentity !== 'all') {
+        const identity = window.identityManager.identities.find(i => i.id === currentIdentity);
+        if (identity) {
+            const namePrefix = identity.name.split(' ')[0];
+            filteredTasks = tasks.filter(t => t.assignee && t.assignee.includes(namePrefix));
+        }
+    }
+    
+    if (filteredTasks.length === 0) {
         taskList.innerHTML = '<div class="empty-state">暂无任务</div>';
         return;
     }
     
-    tasks.forEach(task => {
+    filteredTasks.forEach(task => {
         const card = createTaskCard(task);
         taskList.appendChild(card);
     });
@@ -118,6 +136,58 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// 渲染身份页签
+function renderIdentityTabs() {
+    const container = document.getElementById('identityTabs');
+    if (!container || !window.identityManager) return;
+    
+    const identities = window.identityManager.identities;
+    const tasks = window.tasks || [];
+    
+    let html = `<div class="identity-tab active" onclick="switchIdentityTab('all', this)">📊 全部 (${tasks.length})</div>`;
+    
+    identities.forEach(identity => {
+        const taskCount = tasks.filter(t => t.assignee && t.assignee.includes(identity.name.split(' ')[0])).length;
+        html += `<div class="identity-tab" onclick="switchIdentityTab('${identity.id}', this)">${identity.icon} ${identity.name.split(' - ')[0]} (${taskCount})</div>`;
+    });
+    
+    container.innerHTML = html;
+}
+
+// 切换身份页签
+function switchIdentityTab(identityId, tabElement) {
+    currentIdentity = identityId;
+    
+    // 更新页签样式
+    document.querySelectorAll('.identity-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    tabElement.classList.add('active');
+    
+    // 显示技能区域
+    const skillsSection = document.getElementById('skillsSection');
+    if (skillsSection && identityId !== 'all') {
+        skillsSection.style.display = 'block';
+        // 更新标题
+        const h3 = skillsSection.querySelector('h3');
+        if (h3) {
+            const identity = window.identityManager.identities.find(i => i.id === identityId);
+            if (identity) {
+                h3.textContent = `🎯 ${identity.name} 的技能`;
+            }
+        }
+        // 渲染技能
+        if (window.renderSkills) {
+            window.renderSkills(identityId);
+        }
+    } else if (skillsSection) {
+        skillsSection.style.display = 'none';
+    }
+    
+    // 重新渲染任务
+    renderTasks();
 }
 
 // 身份管理面板切换

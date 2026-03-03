@@ -9,6 +9,19 @@ class IdentityManager {
                 icon: '🤖',
                 color: '#667eea',
                 description: '专业的 AI 助手，专注于 IT 管理和销售支持',
+                skills: [
+                    { name: '数据分析', icon: '📊', level: 95, component: 'openclaw-memory' },
+                    { name: 'CRM 管理', icon: '👥', level: 95, component: 'feishu-bitable' },
+                    { name: '客户分级', icon: '🎯', level: 95, component: 'feishu-bitable' },
+                    { name: '跟进分析', icon: '📈', level: 95, component: 'feishu-bitable' },
+                    { name: '数据清洗', icon: '🧹', level: 90, component: 'openclaw-memory' },
+                    { name: '趋势预测', icon: '🔮', level: 85, component: 'web-search' },
+                    { name: '销售支持', icon: '💼', level: 90, component: 'feishu-chat' },
+                    { name: '报告生成', icon: '📝', level: 95, component: 'feishu-doc' },
+                    { name: '自动化任务', icon: '⚡', level: 90, component: 'openclaw-cron' },
+                    { name: '多任务并行', icon: '🎯', level: 90, component: 'sessions-spawn' },
+                    { name: '记忆管理', icon: '🧠', level: 95, component: 'memory_*' }
+                ],
                 tasks: []
             },
             {
@@ -17,6 +30,13 @@ class IdentityManager {
                 icon: '📊',
                 color: '#10b981',
                 description: '分析客户数据，提供分级和跟进建议',
+                skills: [
+                    { name: '客户分级', icon: '🎯', level: 95, component: 'feishu-bitable' },
+                    { name: '跟进分析', icon: '📈', level: 90, component: 'feishu-bitable' },
+                    { name: '数据清洗', icon: '🧹', level: 85, component: 'openclaw-memory' },
+                    { name: '趋势预测', icon: '🔮', level: 80, component: 'web-search' },
+                    { name: '报表生成', icon: '📋', level: 95, component: 'feishu-doc' }
+                ],
                 tasks: []
             },
             {
@@ -25,14 +45,14 @@ class IdentityManager {
                 icon: '💻',
                 color: '#3b82f6',
                 description: '开发和维护 OpenDashboard 项目',
-                tasks: []
-            },
-            {
-                id: 'optimizer',
-                name: '30 天优化计划执行者',
-                icon: '🎯',
-                color: '#f59e0b',
-                description: '每天完成 2 个功能点优化',
+                skills: [
+                    { name: 'JavaScript', icon: '🟨', level: 95, component: 'nodejs' },
+                    { name: 'HTML/CSS', icon: '🎨', level: 90, component: 'browser' },
+                    { name: 'Python', icon: '🐍', level: 85, component: 'python3' },
+                    { name: 'Git 版本控制', icon: '📦', level: 90, component: 'git' },
+                    { name: '服务器部署', icon: '🚀', level: 85, component: 'systemd' },
+                    { name: 'Bug 修复', icon: '🔧', level: 95, component: 'debug' }
+                ],
                 tasks: []
             }
         ];
@@ -134,11 +154,44 @@ function renderIdentities() {
     container.innerHTML = html;
 }
 
+// 渲染技能
+function renderSkills(identityId) {
+    const container = document.getElementById('skillsList');
+    const section = document.getElementById('skillsSection');
+    if (!container || !section) return;
+    
+    const identity = window.identityManager.identities.find(i => i.id === identityId);
+    if (!identity || !identity.skills) {
+        section.style.display = 'none';
+        return;
+    }
+    
+    section.style.display = 'block';
+    const html = identity.skills.map(skill => `
+        <div class="skill-card">
+            <div class="skill-header">
+                <span class="skill-icon">${skill.icon}</span>
+                <span class="skill-name">${skill.name}</span>
+                <span class="skill-level">${skill.level}%</span>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-fill" style="width: ${skill.level}%"></div>
+            </div>
+        </div>
+    `).join('');
+    
+    container.innerHTML = html;
+}
+
+// 导出 renderSkills 函数
+window.renderSkills = renderSkills;
+
 // 切换身份
 function switchIdentity(identityId) {
     window.identityManager.switchIdentity(identityId);
     renderIdentities();
     renderTasks();
+    renderSkills(identityId);
 }
 
 // 渲染任务列表
