@@ -274,7 +274,6 @@ opendashboard/
 │   └── style.css       # 样式文件
 ├── js/
 │   ├── app.js          # 主应用逻辑
-│   ├── analytics.js    # 数据分析
 │   ├── performance.js  # 性能监控
 │   ├── identity.js     # 身份管理
 │   ├── voice-input.js  # 语音输入
