@@ -120,12 +120,22 @@ async function loadTasks() {
     try {
         showLoading();
         
+        // 性能监控：开始 API 调用
+        if (window.perfMonitor) {
+            window.perfMonitor.startAPICall();
+        }
+        
         const response = await fetch('tasks/tasks.json');
         if (!response.ok) throw new Error('无法加载任务数据');
         
         const data = await response.json();
         tasks = data.tasks || [];
         taskOrder = data.taskOrder || [];
+        
+        // 性能监控：结束 API 调用
+        if (window.perfMonitor) {
+            window.perfMonitor.endAPICall();
+        }
         
         // 应用自定义顺序
         if (taskOrder.length > 0) {
@@ -374,6 +384,11 @@ function updateStats(filteredTasks) {
 
 // 渲染任务
 function renderTasks(filteredTasks) {
+    // 性能监控：开始渲染
+    if (window.perfMonitor) {
+        window.perfMonitor.startRender();
+    }
+    
     // 清空列表
     document.getElementById('progressTasks').innerHTML = '';
     document.getElementById('todoTasks').innerHTML = '';
@@ -390,6 +405,11 @@ function renderTasks(filteredTasks) {
     handleEmptyState('todoTasks', filteredTasks.filter(t => t.status === 'todo').length);
     handleEmptyState('blockedTasks', filteredTasks.filter(t => t.status === 'blocked').length);
     handleEmptyState('doneTasks', filteredTasks.filter(t => t.status === 'done').length);
+    
+    // 性能监控：结束渲染
+    if (window.perfMonitor) {
+        window.perfMonitor.endRender(filteredTasks.length);
+    }
 }
 
 // 渲染单个任务卡片

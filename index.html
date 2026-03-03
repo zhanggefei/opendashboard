@@ -20,6 +20,7 @@
                 <p class="subtitle">OpenClaw 任务管理可视化面板</p>
                 <div class="header-meta">
                     <span id="lastUpdate">最后更新：--</span>
+                    <button class="icon-btn" onclick="togglePerformancePanel()" title="性能监控">⚡</button>
                     <button class="icon-btn" onclick="toggleNotifications()" title="通知设置">🔔</button>
                     <button class="icon-btn" onclick="showIdentityPanel()" title="身份管理">👤</button>
                     <button class="icon-btn" onclick="showTemplatesModal()" title="任务模板">📋</button>
@@ -82,6 +83,11 @@
                 <button class="filter-btn" onclick="clearFilters()">清空筛选</button>
                 <span class="result-count" id="resultCount">显示 0/0 任务</span>
             </div>
+        </div>
+
+        <!-- 性能监控面板 -->
+        <div id="performancePanel" class="performance-panel" style="display: none;">
+            <div class="perf-metrics"></div>
         </div>
 
         <!-- 统计卡片 -->
@@ -233,10 +239,20 @@
     <script src="js/settings.js"></script>
     <script src="js/gestures.js"></script>
     <script src="js/voice-input.js"></script>
+    <script src="js/performance.js"></script>
     <script src="js/openclaw.js"></script>
     <script src="js/identity.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // 切换性能监控面板
+        function togglePerformancePanel() {
+            const panel = document.getElementById('performancePanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if (panel.style.display === 'block' && window.perfMonitor) {
+                window.perfMonitor.updateDisplay();
+            }
+        }
+
         // 初始化身份管理
         window.identityManager = new IdentityManager();
         addSampleTasks();
