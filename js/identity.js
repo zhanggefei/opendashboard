@@ -20,7 +20,8 @@ class IdentityManager {
                     { name: '报告生成', icon: '📝', level: 95, component: 'feishu-doc' },
                     { name: '自动化任务', icon: '⚡', level: 90, component: 'openclaw-cron' },
                     { name: '多任务并行', icon: '🎯', level: 90, component: 'sessions-spawn' },
-                    { name: '记忆管理', icon: '🧠', level: 95, component: 'memory_*' }
+                    { name: '记忆管理', icon: '🧠', level: 95, component: 'memory_*' },
+                    { name: '会话历史', icon: '📜', level: 90, component: 'sessions_history' }
                 ],
                 tasks: []
             },
