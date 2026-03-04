@@ -1,128 +1,70 @@
 {
-  "version": 1,
-  "jobs": [
-    {
-      "name": "狗蛋思考同步",
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 */30 * * *",
-        "staggerMs": 300000
-      },
-      "description": "每 30 分钟同步狗蛋的思考记录到飞书",
-      "enabled": false,
-      "timezone": "Asia/Shanghai",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/sync_thoughts_to_feishu.py"
-      },
-      "sessionTarget": "main",
-      "state": {
-        "lastRunAtMs": 1772631001761,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 219607,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
-      },
-      "updatedAtMs": 1772631221368
-    },
-    {
-      "name": "Alpaca 股票日报",
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 7 * * *"
-      },
-      "description": "每日早上 7 点发送 Alpaca 股票盈亏报告",
-      "enabled": true,
-      "timezone": "Asia/Shanghai",
-      "state": {
-        "nextRunAtMs": 1772665200000
-      },
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/alpaca_daily_report.py"
-      },
-      "sessionTarget": "main"
-    },
-    {
-      "name": "Alpaca 自动交易",
-      "schedule": {
-        "kind": "cron",
-        "expr": "30 21 * * *"
-      },
-      "description": "每日晚上 21:30 执行 Alpaca 自动交易",
-      "enabled": true,
-      "timezone": "Asia/Shanghai",
-      "state": {
-        "nextRunAtMs": 1772631000000,
-        "runningAtMs": 1772631001757
-      },
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/alpaca_auto_execute.py"
-      },
-      "sessionTarget": "main"
-    },
-    {
-      "name": "OpenDashboard 任务同步",
-      "schedule": {
-        "kind": "cron",
-        "expr": "*/1 * * * *"
-      },
-      "description": "每 1 分钟同步 OpenClaw 任务状态到 OpenDashboard（页面刷新时自动获取最新数据）",
-      "enabled": true,
-      "timezone": "Asia/Shanghai",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/sync_openclaw_tasks.py"
-      },
-      "sessionTarget": "main",
-      "state": {
-        "nextRunAtMs": 1772625780000,
-        "runningAtMs": 1772625780007
-      }
-    },
-    {
-      "name": "CRM 每日早晨报告",
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 7 * * *"
-      },
-      "description": "每天早上 7 点推荐 40 个今日应跟进客户",
-      "enabled": true,
-      "timezone": "Asia/Shanghai",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py morning"
-      },
-      "sessionTarget": "main",
-      "state": {
-        "nextRunAtMs": 1772665200000
-      }
-    },
-    {
-      "name": "CRM 每日晚上报告",
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 18 * * *"
-      },
-      "description": "每天晚上 6 点分析当日客户跟进情况",
-      "enabled": true,
-      "timezone": "Asia/Shanghai",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py evening"
-      },
-      "sessionTarget": "main",
-      "state": {
-        "nextRunAtMs": 1772704800000
-      }
-    }
-  ]
+    "version": 1,
+    "jobs": [
+        {
+            "name": "OpenDashboard \u4efb\u52a1\u540c\u6b65",
+            "schedule": {
+                "kind": "cron",
+                "expr": "*/1 * * * *"
+            },
+            "description": "\u6bcf 1 \u5206\u949f\u540c\u6b65 OpenClaw \u4efb\u52a1\u72b6\u6001\u5230 OpenDashboard\uff08\u9875\u9762\u5237\u65b0\u65f6\u81ea\u52a8\u83b7\u53d6\u6700\u65b0\u6570\u636e\uff09",
+            "enabled": true,
+            "timezone": "Asia/Shanghai",
+            "wakeMode": "now",
+            "payload": {
+                "kind": "systemEvent",
+                "text": "python3 /Users/zhang/.openclaw/workspace/sync_openclaw_tasks.py"
+            },
+            "sessionTarget": "main",
+            "state": {
+                "nextRunAtMs": 1772633100000,
+                "lastRunAtMs": 1772632980011,
+                "lastRunStatus": "ok",
+                "lastStatus": "ok",
+                "lastDurationMs": 114513,
+                "lastDeliveryStatus": "not-requested",
+                "consecutiveErrors": 0,
+                "runningAtMs": 1772633100005
+            },
+            "updatedAtMs": 1772633094524
+        },
+        {
+            "name": "CRM \u6bcf\u65e5\u65e9\u6668\u62a5\u544a",
+            "schedule": {
+                "kind": "cron",
+                "expr": "0 7 * * *"
+            },
+            "description": "\u6bcf\u5929\u65e9\u4e0a 7 \u70b9\u63a8\u8350 40 \u4e2a\u4eca\u65e5\u5e94\u8ddf\u8fdb\u5ba2\u6237",
+            "enabled": true,
+            "timezone": "Asia/Shanghai",
+            "wakeMode": "now",
+            "payload": {
+                "kind": "systemEvent",
+                "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py morning"
+            },
+            "sessionTarget": "main",
+            "state": {
+                "nextRunAtMs": 1772665200000
+            }
+        },
+        {
+            "name": "CRM \u6bcf\u65e5\u665a\u4e0a\u62a5\u544a",
+            "schedule": {
+                "kind": "cron",
+                "expr": "0 18 * * *"
+            },
+            "description": "\u6bcf\u5929\u665a\u4e0a 6 \u70b9\u5206\u6790\u5f53\u65e5\u5ba2\u6237\u8ddf\u8fdb\u60c5\u51b5",
+            "enabled": true,
+            "timezone": "Asia/Shanghai",
+            "wakeMode": "now",
+            "payload": {
+                "kind": "systemEvent",
+                "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py evening"
+            },
+            "sessionTarget": "main",
+            "state": {
+                "nextRunAtMs": 1772704800000
+            }
+        }
+    ]
 }
