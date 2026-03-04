@@ -74,194 +74,6 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         
-        /* 图标按钮样式 */
-        .icon-btn, .refresh-btn {
-            padding: 8px 12px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 18px;
-        }
-        .icon-btn:hover, .refresh-btn:hover {
-            background: #f5f5f5;
-            border-color: #667eea;
-        }
-        
-        /* 身份技能展示样式 */
-        .skills-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-        .skills-section h3 {
-            margin-bottom: 20px;
-            color: #1a1a1a;
-        }
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .skill-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        .skill-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-        .skill-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .skill-icon {
-            font-size: 24px;
-        }
-        .skill-name {
-            font-weight: 600;
-            color: #1a1a1a;
-            flex: 1;
-        }
-        .skill-level {
-            font-size: 12px;
-            color: #667eea;
-            font-weight: bold;
-        }
-        .skill-bar {
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .skill-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-        
-        /* 平台技能展示 */
-        .platform-skills-section {
-            margin: 30px 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-            background: white;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-        }
-        .platform-skills-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            border-bottom: none;
-            border-radius: 12px 12px 0 0;
-        }
-        .platform-skills-header:hover {
-            background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
-        }
-        .platform-skills-header h3 {
-            margin: 0;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        #platformSkillsToggleIcon {
-            font-size: 20px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            color: white;
-        }
-        #platformSkillsContent {
-            background: white;
-            padding: 20px;
-            transition: all 0.3s;
-            max-height: 2000px;
-            opacity: 1;
-        }
-        #platformSkillsContent.collapsed {
-            display: none;
-            max-height: 0;
-            opacity: 0;
-            padding: 0;
-        }
-        .skills-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .skills-tab {
-            padding: 8px 16px;
-            background: #f3f4f6;
-            border: 2px solid #e5e7eb;
-            border-radius: 20px;
-            color: #555;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .skills-tab:hover {
-            background: #e5e7eb;
-            border-color: #667eea;
-        }
-        .skills-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-        .platform-skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
-        }
-        .platform-skill-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-            border: 1px solid #e0e0e0;
-        }
-        .platform-skill-card:hover {
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-            transform: translateY(-4px);
-            border-color: #667eea;
-        }
-        .platform-skill-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        .platform-skill-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 4px;
-        }
-        .platform-skill-component {
-            font-size: 11px;
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-            padding: 3px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 6px;
-        }
     </style>
 </head>
 <body>
@@ -274,40 +86,12 @@
                 <div class="header-meta">
                     <span id="lastUpdate">最后更新：--</span>
                     <a href="cron_manager.html" class="header-btn" title="定时任务管理">⏰ 定时任务</a>
-                    <button class="icon-btn" onclick="showIdentityPanel()" title="身份管理">👤</button>
-                    <button class="refresh-btn" onclick="loadTasks()">🔄 刷新</button>
                 </div>
             </div>
         </header>
 
         <!-- 身份页签 -->
         <div class="identity-tabs" id="identityTabs"></div>
-
-        <!-- 身份技能展示区域 -->
-        <div class="skills-section" id="skillsSection" style="display: none;">
-            <h3>🎯 当前身份技能</h3>
-            <div id="skillsList" class="skills-grid"></div>
-        </div>
-
-        <!-- 平台技能展示 -->
-        <div class="platform-skills-section" id="platformSkillsSection">
-            <div class="platform-skills-header" onclick="togglePlatformSkills()">
-                <h3>🔧 OpenClaw 平台技能</h3>
-                <span id="platformSkillsToggleIcon" style="font-size: 20px; cursor: pointer;">▼</span>
-            </div>
-            <div id="platformSkillsContent">
-                <div class="skills-tabs">
-                    <button class="skills-tab active" onclick="showPlatformSkills('all')">全部</button>
-                    <button class="skills-tab" onclick="showPlatformSkills('data')">数据分析</button>
-                    <button class="skills-tab" onclick="showPlatformSkills('crm')">CRM 管理</button>
-                    <button class="skills-tab" onclick="showPlatformSkills('auto')">自动化</button>
-                    <button class="skills-tab" onclick="showPlatformSkills('dev')">开发工具</button>
-                    <button class="skills-tab" onclick="showPlatformSkills('comm')">通信</button>
-                    <button class="skills-tab" onclick="showPlatformSkills('file')">文件处理</button>
-                </div>
-                <div id="platformSkillsList" class="platform-skills-grid"></div>
-            </div>
-        </div>
 
         <!-- 统计卡片 -->
         <div class="stats">
@@ -336,17 +120,11 @@
 
     <script src="js/identity.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/platform_skills.js"></script>
     <script>
         // 初始化身份管理
         window.identityManager = new IdentityManager();
         renderIdentityTabs();
         loadTasks();
-        
-        // 初始化平台技能
-        setTimeout(() => {
-            showPlatformSkills('all');
-        }, 100);
     </script>
 </body>
 </html>
