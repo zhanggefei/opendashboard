@@ -152,12 +152,13 @@ function createTaskCard(task, type) {
     const startTime = task.startTime || '-';
     const completedTime = task.completedTime || '-';
     
-    // 第一行：任务内容（标题 + 描述 + 负责人）
-    // 第二行：统计信息（执行时长、Token、时间）
+    // 第一行：标题 + 优先级 + 状态
+    // 第二行：负责人 + 描述
+    // 第三行：统计信息（执行时长、Token、时间）
     card.innerHTML = `
         <div style="margin-bottom:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-                <h3 style="margin:0;font-size:15px;font-weight:700;color:#1f2937;line-height:1.4;max-width:70%;">${escapeHtml(task.title)}</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <h3 style="margin:0;font-size:15px;font-weight:700;color:#1f2937;">${escapeHtml(task.title)}</h3>
                 <div style="display:flex;gap:6px;flex-shrink:0;">
                     <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">${priorityLabel}</span>
                     <span style="background:linear-gradient(135deg,${getGradientColor(type)});color:white;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">${statusLabel}</span>
