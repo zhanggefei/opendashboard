@@ -49,7 +49,7 @@ async function loadTasks() {
 
 let currentIdentity = 'all';
 
-// 渲染任务列表
+// 渲染任务列表（只显示执行中的任务）
 function renderTasks() {
     const taskList = document.getElementById('taskList');
     const progressCount = document.getElementById('progressCount');
@@ -57,12 +57,14 @@ function renderTasks() {
     
     taskList.innerHTML = '';
     
-    let filteredTasks = tasks;
+    // 过滤：只显示执行中的任务（status === 'progress'）
+    let filteredTasks = tasks.filter(t => t.status === 'progress');
+    
     if (currentIdentity !== 'all') {
         const identity = window.identityManager.identities.find(i => i.id === currentIdentity);
         if (identity) {
             const namePrefix = identity.name.split(' ')[0];
-            filteredTasks = tasks.filter(t => t.assignee && t.assignee.includes(namePrefix));
+            filteredTasks = filteredTasks.filter(t => t.assignee && t.assignee.includes(namePrefix));
         }
     }
     
