@@ -299,61 +299,12 @@ function completeTask(taskId) {
     }
 }
 
-// 添加示例任务
-function addSampleTasks() {
-    // 狗蛋任务
-    window.identityManager.addTask('dogdan', {
-        id: 'dog_001',
-        title: '完成今日工作汇报',
-        description: '汇总今日完成的所有工作，生成总结报告',
-        priority: 'P0',
-        status: 'todo',
-        deadline: '2026-03-01'
-    });
-
-    // CRM 数据分析师任务
-    window.identityManager.addTask('crm_analyst', {
-        id: 'crm_001',
-        title: '分析公海池客户数据',
-        description: '分析 5,802 条公海池客户，生成分级和跟进建议',
-        priority: 'P0',
-        status: 'done',
-        deadline: '2026-03-01'
-    });
-
-    // OpenDashboard 开发者任务
-    window.identityManager.addTask('developer', {
-        id: 'dev_001',
-        title: '开发身份管理功能',
-        description: '在 OpenDashboard 中增加身份管理模块',
-        priority: 'P0',
-        status: 'progress',
-        deadline: '2026-03-01'
-    });
-    window.identityManager.addTask('developer', {
-        id: 'dev_002',
-        title: '修复身份切换 bug',
-        description: '修复点击身份时任务数量不更新的问题',
-        priority: 'P0',
-        status: 'progress',
-        deadline: '2026-03-01'
-    });
-
-    // 30 天优化计划任务
-    window.identityManager.addTask('optimizer', {
-        id: 'opt_001',
-        title: '30 天优化计划 - 第 1 天',
-        description: '每天完成 2 个功能点优化',
-        priority: 'P0',
-        status: 'todo',
-        deadline: '2026-03-02'
-    });
-}
-
 // 初始化
 window.IdentityManager = IdentityManager;
 window.switchIdentity = switchIdentity;
 window.renderIdentities = renderIdentities;
+window.renderIdentityTabs = renderIdentityTabs;
 window.renderTasks = renderTasks;
+window.renderSkills = renderSkills;
 window.startTask = startTask;
 window.completeTask = completeTask;
