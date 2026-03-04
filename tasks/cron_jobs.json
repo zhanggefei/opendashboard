@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "name": "飞书渠道健康检查",
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/5 * * * *"
+      },
+      "description": "每 5 分钟检查飞书渠道状态，发现异常立即通知主人",
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "python3 /Users/zhang/.openclaw/workspace/check_feishu_health.py"
+      },
+      "sessionTarget": "main",
+      "state": {
+        "nextRunAtMs": 1772599200000,
+        "lastRunAtMs": 1772598901512,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 26162,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 0
+      },
+      "updatedAtMs": 1772598927674
+    },
+    {
+      "name": "Alpaca 股票日报",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 7 * * *"
+      },
+      "description": "每日早上 7 点发送 Alpaca 股票盈亏报告",
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "state": {
+        "nextRunAtMs": 1772665200000
+      },
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "python3 /Users/zhang/.openclaw/workspace/alpaca_daily_report.py"
+      },
+      "sessionTarget": "main"
+    },
+    {
+      "name": "Alpaca 自动交易",
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 21 * * *"
+      },
+      "description": "每日晚上 21:30 执行 Alpaca 自动交易",
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "state": {
+        "nextRunAtMs": 1772631000000
+      },
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "python3 /Users/zhang/.openclaw/workspace/alpaca_auto_execute.py"
+      },
+      "sessionTarget": "main"
+    },
+    {
+      "name": "OpenDashboard 任务同步",
+      "schedule": {
+        "kind": "cron",
+        "expr": "* * * * *"
+      },
+      "description": "每 1 分钟同步 OpenClaw 任务状态到 OpenDashboard",
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "python3 /Users/zhang/.openclaw/workspace/sync_openclaw_tasks.py"
+      },
+      "sessionTarget": "main",
+      "state": {
+        "nextRunAtMs": 1772598480000,
+        "runningAtMs": 1772598480008
+      }
+    }
+  ]
+}

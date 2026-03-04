@@ -4,196 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>定时任务管理 - OpenDashboard</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .header {
+        .cron-container {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        .cron-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid #667eea;
+        .cron-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
         }
-        .cron-card.active {
-            border-left-color: #10b981;
+        .cron-header h1 {
+            color: #333;
+            font-size: 24px;
         }
-        .cron-card.paused {
-            border-left-color: #f59e0b;
-        }
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
+        .refresh-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.3s;
         }
-        .btn-primary {
-            background: #667eea;
-            color: white;
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
-        .btn-danger {
-            background: #ef4444;
-            color: white;
+        .cron-grid {
+            display: grid;
+            gap: 20px;
         }
-        .back-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #f5f5f5;
+        .cron-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f3f4f6 100%);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .cron-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+        }
+        .cron-card.active {
+            border-left: 4px solid #10b981;
+        }
+        .cron-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .cron-icon {
+            font-size: 32px;
+        }
+        .cron-name {
+            font-size: 18px;
+            font-weight: 600;
             color: #333;
-            text-decoration: none;
-            border-radius: 8px;
+            flex: 1;
+        }
+        .cron-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .cron-status.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+        .cron-status.pending {
+            background: rgba(107, 114, 128, 0.15);
+            color: #6b7280;
+        }
+        .cron-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        .cron-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .cron-info-label {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .cron-info-value {
+            font-size: 14px;
+            color: #1f2937;
+            font-family: monospace;
+        }
+        .cron-description {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .cron-schedule {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+        .empty-state-icon {
+            font-size: 64px;
             margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-btn">← 返回主页</a>
+        <a href="index.html" class="back-btn" style="display:inline-block;padding:10px 20px;background:#f5f5f5;color:#333;text-decoration:none;border-radius:8px;margin-bottom:20px;">← 返回主页</a>
         
-        <div class="header">
-            <h1>⏰ 定时任务管理</h1>
-            <p>管理和监控所有定时任务的执行情况</p>
+        <div class="cron-container">
+            <div class="cron-header">
+                <h1>⏰ 定时任务管理</h1>
+                <button class="refresh-btn" onclick="loadCronJobs()">🔄 刷新</button>
+            </div>
+            
+            <div id="cronList" class="cron-grid"></div>
         </div>
-        
-        <div id="cronList"></div>
     </div>
 
     <script>
-        // 定时任务数据
-        let cronJobs = [
-            {
-                id: 1,
-                name: 'Alpaca 股票日报',
-                schedule: '0 7 * * *',
-                description: '每天早上 7 点发送 Alpaca 股票盈亏日报到飞书',
-                command: 'python3 /root/alpaca_daily_report.py',
-                status: 'active',
-                lastRun: '2026-03-03 07:00:00',
-                nextRun: '2026-03-04 07:00:00',
-                totalRuns: 2,
-                successRate: 100,
-                logs: [
-                    { time: '2026-03-03 07:00:15', status: 'success', message: '日报发送成功' }
-                ]
-            },
-            {
-                id: 2,
-                name: '美股自动交易',
-                schedule: '30 21 * * *',
-                description: '每晚 21:30 执行 Alpaca 自动交易策略',
-                command: 'python3 /root/alpaca_auto_trade.py',
-                status: 'active',
-                lastRun: '2026-03-02 21:30:00',
-                nextRun: '2026-03-03 21:30:00',
-                totalRuns: 1,
-                successRate: 100,
-                logs: [
-                    { time: '2026-03-02 21:30:25', status: 'success', message: '执行 7 笔交易，全部成功' }
-                ]
-            },
-            {
-                id: 3,
-                name: '飞书渠道健康检查',
-                schedule: '*/5 * * * *',
-                description: '每 5 分钟检查飞书渠道连接状态',
-                command: 'bash /root/feishu_healthcheck.sh',
-                status: 'active',
-                lastRun: '2026-03-04 01:55:00',
-                nextRun: '2026-03-04 02:00:00',
-                totalRuns: 288,
-                successRate: 99,
-                logs: [
-                    { time: '2026-03-04 01:55:00', status: 'success', message: '渠道正常' }
-                ]
+        // 从云端加载定时任务
+        async function loadCronJobs() {
+            try {
+                const response = await fetch('tasks/cron_jobs.json');
+                if (!response.ok) throw new Error('无法加载任务数据');
+                
+                const data = await response.json();
+                renderCronJobs(data.jobs || []);
+            } catch (error) {
+                console.error('加载定时任务失败:', error);
+                document.getElementById('cronList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>无法加载定时任务数据</p>
+                        <p style="font-size:12px;margin-top:10px;">${error.message}</p>
+                    </div>
+                `;
             }
-        ];
+        }
 
-        function renderCronJobs() {
+        function renderCronJobs(jobs) {
             const container = document.getElementById('cronList');
-            if (!container) return;
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>暂无定时任务</h3>
+                        <p>还没有配置任何定时任务</p>
+                    </div>
+                `;
+                return;
+            }
 
-            let html = '';
-            cronJobs.forEach(job => {
-                const statusClass = job.status === 'active' ? 'active' : 'paused';
-                const statusBadge = job.status === 'active' 
-                    ? '<span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">✅ 运行中</span>'
-                    : '<span style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">⏸️ 已暂停</span>';
+            const icons = {
+                '飞书': '📧',
+                'Alpaca': '📈',
+                'OpenDashboard': '📊',
+                '健康': '🏥',
+                '股票': '💰',
+                '交易': '💹',
+                '同步': '🔄'
+            };
 
-                html += `
-                    <div class="cron-card ${statusClass}">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <div>
-                                <div style="font-size: 18px; font-weight: 600; color: #1a1a1a;">${job.name}</div>
-                                <div style="color: #666; font-size: 14px; margin-top: 5px;">${job.description}</div>
-                            </div>
-                            ${statusBadge}
+            const html = jobs.map(job => {
+                const icon = Object.entries(icons).find(([key]) => job.name.includes(key))?.[1] || '⏰';
+                const nextRun = job.state?.nextRunAtMs ? new Date(job.state.nextRunAtMs).toLocaleString('zh-CN') : '未设置';
+                const lastRun = job.state?.lastRunAtMs ? new Date(job.state.lastRunAtMs).toLocaleString('zh-CN') : '未执行';
+                const status = job.enabled ? 'active' : 'pending';
+                const statusText = job.enabled ? '✅ 已启用' : '⏸️ 已暂停';
+
+                return `
+                    <div class="cron-card ${status}">
+                        <div class="cron-card-header">
+                            <span class="cron-icon">${icon}</span>
+                            <span class="cron-name">${job.name}</span>
+                            <span class="cron-status ${status}">${statusText}</span>
                         </div>
-                        <div style="background: #f5f5f5; padding: 8px 12px; border-radius: 6px; font-family: monospace; color: #667eea; font-size: 13px;">
-                            📅 ${job.schedule}
+                        <p class="cron-description">${job.description || '暂无描述'}</p>
+                        <div>
+                            <span class="cron-schedule">${job.schedule?.expr || job.schedule || '未知'}</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 24px; font-weight: bold; color: #667eea;">🕐 ${job.lastRun.split(' ')[1] || '-'}</div>
-                                <div style="font-size: 12px; color: #666; margin-top: 4px;">上次执行</div>
+                        <div class="cron-info">
+                            <div class="cron-info-item">
+                                <span class="cron-info-label">🕐 下次执行</span>
+                                <span class="cron-info-value">${nextRun}</span>
                             </div>
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 24px; font-weight: bold; color: #667eea;">⏰ ${job.nextRun.split(' ')[1] || '-'}</div>
-                                <div style="font-size: 12px; color: #666; margin-top: 4px;">下次执行</div>
+                            <div class="cron-info-item">
+                                <span class="cron-info-label">📝 最后执行</span>
+                                <span class="cron-info-value">${lastRun}</span>
                             </div>
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 24px; font-weight: bold; color: #667eea;">${job.totalRuns}</div>
-                                <div style="font-size: 12px; color: #666; margin-top: 4px;">总执行次数</div>
+                            <div class="cron-info-item">
+                                <span class="cron-info-label">⚙️ 时区</span>
+                                <span class="cron-info-value">${job.timezone || 'Asia/Shanghai'}</span>
                             </div>
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 24px; font-weight: bold; color: ${job.successRate >= 95 ? '#10b981' : '#f59e0b'}">${job.successRate}%</div>
-                                <div style="font-size: 12px; color: #666; margin-top: 4px;">成功率</div>
+                            ${job.state?.lastRunStatus ? `
+                            <div class="cron-info-item">
+                                <span class="cron-info-label">✅ 最后状态</span>
+                                <span class="cron-info-value">${job.state.lastRunStatus}</span>
                             </div>
-                        </div>
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <button class="btn btn-primary" onclick="toggleJob(${job.id})">${job.status === 'active' ? '暂停' : '启动'}</button>
-                            <button class="btn btn-danger" onclick="deleteJob(${job.id})">删除</button>
+                            ` : ''}
                         </div>
                     </div>
                 `;
-            });
+            }).join('');
 
             container.innerHTML = html;
         }
 
-        function toggleJob(id) {
-            const job = cronJobs.find(j => j.id === id);
-            if (job) {
-                job.status = job.status === 'active' ? 'paused' : 'active';
-                renderCronJobs();
-            }
-        }
-
-        function deleteJob(id) {
-            if (confirm('确定要删除这个定时任务吗？')) {
-                cronJobs = cronJobs.filter(j => j.id !== id);
-                renderCronJobs();
-                alert('✅ 删除成功！');
-            }
-        }
-
-        // 初始化
-        renderCronJobs();
+        // 页面加载时获取任务
+        document.addEventListener('DOMContentLoaded', loadCronJobs);
     </script>
 </body>
 </html>
