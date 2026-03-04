@@ -208,11 +208,10 @@
         window.identityManager = new IdentityManager();
         renderIdentityTabs();
         
-        // 显示当前身份的技能
+        // 技能区域默认隐藏，点击身份后才显示
         const skillsSection = document.getElementById('skillsSection');
         if (skillsSection) {
-            skillsSection.style.display = 'block';
-            renderSkills(window.identityManager.currentIdentity);
+            skillsSection.style.display = 'none';
         }
         
         loadTasks();

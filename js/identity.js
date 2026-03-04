@@ -193,6 +193,8 @@ window.renderIdentityTabs = renderIdentityTabs;
 
 // 切换身份
 function switchIdentity(identityId) {
+    const wasActive = window.identityManager.currentIdentity === identityId;
+    
     window.identityManager.switchIdentity(identityId);
     renderIdentityTabs();
     renderTasks();
@@ -202,6 +204,8 @@ function switchIdentity(identityId) {
     const skillsSection = document.getElementById('skillsSection');
     if (skillsSection) {
         skillsSection.style.display = 'block';
+        // 滚动到技能区域
+        skillsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 
