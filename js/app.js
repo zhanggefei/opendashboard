@@ -165,8 +165,9 @@ function createTaskCard(task, type) {
         <div style="margin-bottom:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                 <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
-                    <h3 style="margin:0;font-size:15px;font-weight:700;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(task.title)}</h3>
-                    ${task.assignee ? `<span style="color:#6b7280;font-size:12px;white-space:nowrap;">👤 ${escapeHtml(task.assignee)}</span>` : ''}
+                    <h3 style="margin:0;font-size:15px;font-weight:700;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(task.title)}">${escapeHtml(task.title)}</h3>
+                    ${task.assignee ? `<span style="color:#6b7280;font-size:12px;white-space:nowrap;" title="负责人：${escapeHtml(task.assignee)}">👤 ${escapeHtml(task.assignee)}</span>` : ''}
+                    ${task.metadata?.source === 'feishu' ? `<span style="color:#3b82f6;font-size:12px;white-space:nowrap;" title="来源：飞书">📧</span>` : ''}
                 </div>
                 <div style="display:flex;gap:6px;flex-shrink:0;">
                     <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">${priorityLabel}</span>
