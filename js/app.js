@@ -169,26 +169,26 @@ function createTaskCard(task, type) {
             <p style="margin:0;color:#6b7280;font-size:12px;line-height:1.5;">${escapeHtml(task.description || '')}</p>
         </div>
         
-        <div style="display:flex;gap:16px;align-items:center;padding-top:12px;border-top:2px solid #f3f4f6;">
-            <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:14px;">⏱️</span>
+        <div style="display:flex;gap:20px;align-items:center;padding-top:12px;border-top:2px solid #f3f4f6;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:18px;">⏱️</span>
                 <div>
-                    <div style="font-size:12px;font-weight:700;color:#1f2937;">${executionTime}</div>
-                    <div style="font-size:9px;color:#9ca3af;">${type === 'todo' ? '等待' : '执行时长'}</div>
+                    <div style="font-size:15px;font-weight:700;color:#3b82f6;">${executionTime}</div>
+                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;">${type === 'todo' ? '等待时长' : '执行时长'}</div>
                 </div>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:14px;">💬</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:18px;">💬</span>
                 <div>
-                    <div style="font-size:12px;font-weight:700;color:#1f2937;">${(tokens.total || 0).toLocaleString()}</div>
-                    <div style="font-size:9px;color:#9ca3af;">Token</div>
+                    <div style="font-size:15px;font-weight:700;color:#10b981;">${(tokens.total || 0).toLocaleString()}</div>
+                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;">Token</div>
                 </div>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:14px;">🕐</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:18px;">🕐</span>
                 <div>
-                    <div style="font-size:12px;font-weight:700;color:#1f2937;">${type === 'done' ? (completedTime.split(' ')[1] || completedTime) : startTime}</div>
-                    <div style="font-size:9px;color:#9ca3af;">${type === 'done' ? '完成' : '开始'}</div>
+                    <div style="font-size:15px;font-weight:700;color:#f59e0b;">${type === 'done' ? (completedTime.split(' ')[1] || completedTime) : startTime}</div>
+                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;">${type === 'done' ? '完成时间' : '开始时间'}</div>
                 </div>
             </div>
         </div>
