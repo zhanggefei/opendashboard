@@ -20,50 +20,50 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
         .page-header {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
         
         .page-header h1 {
             color: #2c3e50;
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 24px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
         
         .page-header p {
             color: #7f8c8d;
-            font-size: 16px;
+            font-size: 13px;
         }
         
         .header-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
         }
         
         .btn {
-            padding: 12px 24px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .btn-primary {
@@ -73,7 +73,7 @@
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         
         .btn-secondary {
@@ -89,59 +89,59 @@
         
         .stats-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
         
         .stat-card {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             text-align: center;
             transition: all 0.3s;
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         
         .stat-number {
-            font-size: 42px;
+            font-size: 28px;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .stat-label {
             color: #7f8c8d;
-            font-size: 14px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
         
         .cron-container {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
         
         .cron-grid {
             display: grid;
-            gap: 20px;
+            gap: 15px;
         }
         
         .cron-card {
             background: linear-gradient(135deg, #f8f9ff 0%, #f3f4f6 100%);
             border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 15px;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
@@ -152,7 +152,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 6px;
+            width: 4px;
             height: 100%;
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
         }
@@ -163,43 +163,45 @@
         
         .cron-card:hover {
             border-color: #667eea;
-            transform: translateX(5px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
         
         .cron-card-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
         
         .cron-icon {
-            font-size: 40px;
-            width: 60px;
-            height: 60px;
+            font-size: 28px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
+            border-radius: 10px;
             color: white;
+            flex-shrink: 0;
         }
         
         .cron-name {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #2c3e50;
             flex: 1;
         }
         
         .cron-status {
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 13px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
         
         .cron-status.active {
@@ -214,82 +216,85 @@
         
         .cron-description {
             color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
-            line-height: 1.6;
+            font-size: 12px;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
         
         .cron-schedule {
             background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            padding: 15px 20px;
-            border-radius: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 15px;
+            font-size: 12px;
             color: #667eea;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             display: inline-block;
         }
         
         .cron-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            padding-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            padding-top: 12px;
             border-top: 2px solid rgba(102, 126, 234, 0.15);
         }
         
         .cron-info-item {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .cron-info-icon {
+            font-size: 14px;
+            flex-shrink: 0;
         }
         
         .cron-info-label {
-            font-size: 12px;
+            font-size: 10px;
             color: #95a5a6;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
         
         .cron-info-value {
-            font-size: 15px;
+            font-size: 12px;
             color: #2c3e50;
             font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         .empty-state {
             text-align: center;
-            padding: 80px 20px;
+            padding: 60px 20px;
             color: #95a5a6;
         }
         
         .empty-state-icon {
-            font-size: 80px;
-            margin-bottom: 25px;
-        }
-        
-        .empty-state h3 {
-            font-size: 24px;
-            color: #7f8c8d;
-            margin-bottom: 10px;
+            font-size: 60px;
+            margin-bottom: 20px;
         }
         
         .last-update {
             text-align: right;
             color: #95a5a6;
-            font-size: 13px;
-            margin-top: 20px;
+            font-size: 11px;
+            margin-top: 15px;
         }
         
         @media (max-width: 768px) {
             .page-header h1 {
-                font-size: 24px;
+                font-size: 20px;
             }
             
             .stats-bar {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .cron-info {
@@ -312,7 +317,7 @@
                     ← 返回主页
                 </a>
                 <button class="btn btn-primary" onclick="loadCronJobs()">
-                    🔄 刷新数据
+                    🔄 刷新
                 </button>
             </div>
         </div>
@@ -321,7 +326,7 @@
         <div class="stats-bar">
             <div class="stat-card">
                 <div class="stat-number" id="statTotal">0</div>
-                <div class="stat-label">📋 总任务数</div>
+                <div class="stat-label">📋 总任务</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="statActive">0</div>
@@ -394,12 +399,21 @@
                 '思考': '💭',
                 '早晨': '🌅',
                 '晚上': '🌙',
-                '同步': '🔄'
+                '同步': '🔄',
+                '任务': '📋',
+                '报告': '📝'
             };
 
             const html = cronJobs.map(job => {
                 const name = job.name;
-                const icon = Object.entries(icons).find(([key]) => name.includes(key))?.[1] || '⏰';
+                let icon = '⏰';
+                for (const [key, value] of Object.entries(icons)) {
+                    if (name.includes(key)) {
+                        icon = value;
+                        break;
+                    }
+                }
+                
                 const schedule = job.schedule?.expr || job.schedule || '未知';
                 const enabled = job.enabled !== false;
                 const statusClass = enabled ? 'active' : 'paused';
@@ -427,19 +441,23 @@
                         
                         <div class="cron-info">
                             <div class="cron-info-item">
-                                <span class="cron-info-label">🕐 下次执行</span>
-                                <span class="cron-info-value">${nextRun}</span>
+                                <span class="cron-info-icon">🕐</span>
+                                <span class="cron-info-label">下次执行</span>
+                                <span class="cron-info-value" title="${nextRun}">${nextRun.split(' ')[1] || nextRun}</span>
                             </div>
                             <div class="cron-info-item">
-                                <span class="cron-info-label">📝 最后执行</span>
-                                <span class="cron-info-value">${lastRun}</span>
+                                <span class="cron-info-icon">📝</span>
+                                <span class="cron-info-label">最后执行</span>
+                                <span class="cron-info-value" title="${lastRun}">${lastRun.split(' ')[1] || lastRun}</span>
                             </div>
                             <div class="cron-info-item">
-                                <span class="cron-info-label">✅ 最后状态</span>
+                                <span class="cron-info-icon">✅</span>
+                                <span class="cron-info-label">状态</span>
                                 <span class="cron-info-value">${lastStatus}</span>
                             </div>
                             <div class="cron-info-item">
-                                <span class="cron-info-label">⚙️ 时区</span>
+                                <span class="cron-info-icon">⚙️</span>
+                                <span class="cron-info-label">时区</span>
                                 <span class="cron-info-value">${job.timezone || 'Asia/Shanghai'}</span>
                             </div>
                         </div>
@@ -455,7 +473,6 @@
             const active = cronJobs.filter(j => j.enabled !== false).length;
             const paused = total - active;
             
-            // 计算下次执行时间（最近的）
             let nextRunTime = null;
             cronJobs.forEach(job => {
                 if (job.enabled !== false && job.state?.nextRunAtMs) {
@@ -472,10 +489,7 @@
                 new Date(nextRunTime).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'}) : '-';
         }
 
-        // 页面加载时获取任务
         document.addEventListener('DOMContentLoaded', loadCronJobs);
-        
-        // 每 30 秒自动刷新
         setInterval(loadCronJobs, 30000);
     </script>
 </body>

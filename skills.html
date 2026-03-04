@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw 技能中心</title>
+    <title>技能中心 - OpenDashboard</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             margin: 0;
@@ -13,96 +14,134 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #f3f4f6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
-        /* 头部 - 紫色渐变 */
-        header {
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .header-content h1 {
             color: white;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         
-        .subtitle {
-            color: rgba(255,255,255,0.9);
-            font-size: 15px;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
             margin-bottom: 20px;
         }
         
-        .back-btn {
-            display: inline-block;
-            padding: 10px 18px;
-            background: rgba(255,255,255,0.15);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .back-btn:hover {
-            background: rgba(255,255,255,0.25);
-            transform: translateY(-1px);
-        }
-        
-        /* 统计栏 - 白色背景 */
-        .stats-bar {
-            display: flex;
-            gap: 40px;
-            padding: 25px 40px;
+        .stat-card {
             background: white;
-            border-bottom: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
         }
         
-        .stat-item {
-            text-align: center;
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         
         .stat-number {
-            font-size: 42px;
+            font-size: 28px;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 5px;
         }
         
         .stat-label {
-            font-size: 14px;
-            color: #6b7280;
-            margin-top: 5px;
+            color: #7f8c8d;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        /* 搜索框 - 白色背景 */
-        .search-box {
-            padding: 20px 40px;
+        .skills-container {
             background: white;
-            border-bottom: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
         }
         
         .search-box input {
             width: 100%;
-            padding: 14px 20px;
+            padding: 12px 20px;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             transition: all 0.3s;
             background: #f9fafb;
         }
@@ -114,22 +153,17 @@
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
         
-        /* 技能列表 */
-        .skills-container {
-            padding: 40px;
-        }
-        
         .category-section {
-            margin-bottom: 40px;
+            margin-bottom: 25px;
         }
         
         .category-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.15);
         }
         
         .category-icon {
@@ -137,30 +171,45 @@
         }
         
         .category-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #1f2937;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
         }
         
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
         }
         
         .skill-card {
-            background: white;
-            border: 2px solid #e5e7eb;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f3f4f6 100%);
+            border: 2px solid rgba(102, 126, 234, 0.2);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             transition: all 0.3s;
-            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        }
+        
+        .skill-card.unused::before {
+            background: linear-gradient(180deg, #9ca3af 0%, #6b7280 100%);
         }
         
         .skill-card:hover {
             border-color: #667eea;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15);
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
         
         .skill-header {
@@ -171,89 +220,141 @@
         }
         
         .skill-icon {
-            font-size: 32px;
+            font-size: 28px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+            flex-shrink: 0;
         }
         
         .skill-name {
             font-size: 16px;
-            font-weight: 600;
-            color: #1f2937;
-        }
-        
-        .skill-desc {
-            font-size: 14px;
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        .skill-component {
-            display: inline-block;
-            padding: 6px 12px;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            color: #2c3e50;
+            flex: 1;
         }
         
         .skill-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
-            margin-top: 10px;
-            margin-left: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
         
         .skill-status.used {
-            background: rgba(16, 185, 129, 0.15);
+            background: linear-gradient(135deg, #d5f5e3 0%, #abebc6 100%);
             color: #059669;
-            border: 1px solid rgba(16, 185, 129, 0.3);
         }
         
         .skill-status.unused {
-            background: rgba(107, 114, 128, 0.15);
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
             color: #6b7280;
-            border: 1px solid rgba(107, 114, 128, 0.3);
         }
         
-        .skill-card:hover .skill-name {
+        .skill-desc {
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .skill-component {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
             color: #667eea;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #95a5a6;
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .last-update {
+            text-align: right;
+            color: #95a5a6;
+            font-size: 11px;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 20px;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 头部 -->
-        <header>
-            <div class="header-content">
-                <h1>🔧 OpenClaw 技能中心</h1>
-                <p class="subtitle">完整的工具和能力清单</p>
-                <a href="index.html" class="back-btn">← 返回任务面板</a>
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <h1>
+                🔧 OpenClaw 技能中心
+            </h1>
+            <p>完整的工具和能力清单，共 60+ 个技能</p>
+            
+            <div class="header-actions">
+                <a href="index.html" class="btn btn-secondary">
+                    ← 返回主页
+                </a>
+                <button class="btn btn-primary" onclick="renderSkills()">
+                    🔄 刷新
+                </button>
             </div>
-        </header>
-
-        <!-- 统计栏 -->
+        </div>
+        
+        <!-- 统计卡片 -->
         <div class="stats-bar">
-            <div class="stat-item">
-                <div class="stat-number" id="totalSkills">0</div>
-                <div class="stat-label">总技能数</div>
+            <div class="stat-card">
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">📚 总技能数</div>
             </div>
-            <div class="stat-item">
-                <div class="stat-number" id="totalCategories">0</div>
-                <div class="stat-label">分类数</div>
+            <div class="stat-card">
+                <div class="stat-number" id="statUsed">0</div>
+                <div class="stat-label">✅ 已使用</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statUnused">0</div>
+                <div class="stat-label">⭕ 未使用</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statCategories">0</div>
+                <div class="stat-label">📂 分类数</div>
             </div>
         </div>
-
+        
         <!-- 搜索框 -->
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 搜索技能名称、描述或组件..." oninput="filterSkills()">
+        <div class="skills-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 搜索技能名称、描述或组件..." oninput="renderSkills()">
+            </div>
+            
+            <!-- 技能列表 -->
+            <div id="skillsList"></div>
+            <div class="last-update" id="lastUpdate"></div>
         </div>
-
-        <!-- 技能列表 -->
-        <div class="skills-container" id="skillsList"></div>
     </div>
 
     <script>
@@ -386,25 +487,26 @@
             }
         ];
 
-        function renderSkills(filter = '') {
+        function renderSkills() {
             const container = document.getElementById('skillsList');
-            const filterLower = filter.toLowerCase();
+            const filter = document.getElementById('searchInput').value.toLowerCase();
             
             let html = '';
             let totalSkills = 0;
+            let usedSkills = 0;
+            let unusedSkills = 0;
             let visibleCategories = 0;
 
             skillsData.forEach(category => {
                 const filteredSkills = category.skills.filter(skill => 
-                    skill.name.toLowerCase().includes(filterLower) ||
-                    skill.desc.toLowerCase().includes(filterLower) ||
-                    skill.component.toLowerCase().includes(filterLower)
+                    skill.name.toLowerCase().includes(filter) ||
+                    skill.desc.toLowerCase().includes(filter) ||
+                    skill.component.toLowerCase().includes(filter)
                 );
 
                 if (filteredSkills.length > 0) {
                     visibleCategories++;
-                    totalSkills += filteredSkills.length;
-
+                    
                     html += `
                         <div class="category-section">
                             <div class="category-header">
@@ -412,38 +514,55 @@
                                 <h2 class="category-title">${category.category}</h2>
                             </div>
                             <div class="skills-grid">
-                                ${filteredSkills.map(skill => `
-                                    <div class="skill-card">
-                                        <div class="skill-header">
-                                            <span class="skill-icon">${skill.icon}</span>
-                                            <h3 class="skill-name">${skill.name}</h3>
+                                ${filteredSkills.map(skill => {
+                                    totalSkills++;
+                                    if (skill.used) {
+                                        usedSkills++;
+                                    } else {
+                                        unusedSkills++;
+                                    }
+                                    
+                                    const statusClass = skill.used ? 'used' : 'unused';
+                                    const statusText = skill.used ? '已使用' : '未使用';
+                                    
+                                    return `
+                                        <div class="skill-card ${statusClass}">
+                                            <div class="skill-header">
+                                                <div class="skill-icon">${skill.icon}</div>
+                                                <div class="skill-name">${skill.name}</div>
+                                                <div class="skill-status ${statusClass}">${statusText}</div>
+                                            </div>
+                                            <p class="skill-desc">${skill.desc}</p>
+                                            <div class="skill-component">${skill.component}</div>
                                         </div>
-                                        <p class="skill-desc">${skill.desc}</p>
-                                        <div>
-                                            <span class="skill-component">${skill.component}</span>
-                                            <span class="skill-status ${skill.used ? 'used' : 'unused'}">
-                                                ${skill.used ? '✅ 已使用' : '⭕ 未使用'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     `;
                 }
             });
 
-            container.innerHTML = html;
-            document.getElementById('totalSkills').textContent = totalSkills;
-            document.getElementById('totalCategories').textContent = visibleCategories;
+            container.innerHTML = html || `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <h3>未找到相关技能</h3>
+                    <p>尝试其他关键词搜索</p>
+                </div>
+            `;
+            
+            // 更新统计
+            document.getElementById('statTotal').textContent = totalSkills;
+            document.getElementById('statUsed').textContent = usedSkills;
+            document.getElementById('statUnused').textContent = unusedSkills;
+            document.getElementById('statCategories').textContent = visibleCategories;
+            
+            document.getElementById('lastUpdate').textContent = 
+                `最后更新：${new Date().toLocaleTimeString('zh-CN')}`;
         }
 
-        function filterSkills() {
-            const query = document.getElementById('searchInput').value;
-            renderSkills(query);
-        }
-
-        renderSkills();
+        // 页面加载时渲染
+        document.addEventListener('DOMContentLoaded', renderSkills);
     </script>
 </body>
 </html>

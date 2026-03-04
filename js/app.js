@@ -15,24 +15,32 @@ async function loadTasks() {
     try {
         showLoading();
         
-        const response = await fetch('tasks/tasks.json');
+        const response = await fetch('tasks/tasks.json?' + Date.now());
         if (!response.ok) throw new Error('无法加载任务数据');
         
         const data = await response.json();
         tasks = data.tasks || [];
+        const completedTasks = data.completedTasks || [];
+        
         window.tasks = tasks;
+        window.completedTasks = completedTasks;
         
         renderIdentityTabs();
         renderTasks();
+        renderCompletedTasks();
         updateStats();
         updateLastUpdate();
         
         console.log('✅ 数据已加载', new Date().toLocaleTimeString('zh-CN'));
+        console.log(`   当前任务：${tasks.length} 个`);
+        console.log(`   已完成：${completedTasks.length} 个`);
         
     } catch (error) {
         console.error('加载任务失败:', error);
         tasks = [];
+        window.completedTasks = [];
         renderTasks();
+        renderCompletedTasks();
     }
 }
 
@@ -57,7 +65,7 @@ function renderTasks() {
     }
     
     if (filteredTasks.length === 0) {
-        taskList.innerHTML = '<div class="empty-state">暂无任务</div>';
+        taskList.innerHTML = '<div class="empty-state">暂无当前任务</div>';
         return;
     }
     
@@ -65,6 +73,70 @@ function renderTasks() {
         const card = createTaskCard(task);
         taskList.appendChild(card);
     });
+}
+
+// 渲染已完成任务
+function renderCompletedTasks() {
+    const completedList = document.getElementById('completedTaskList');
+    if (!completedList) return;
+    
+    completedList.innerHTML = '';
+    
+    const completedTasks = window.completedTasks || [];
+    
+    if (completedTasks.length === 0) {
+        completedList.innerHTML = '<div class="empty-state">暂无已完成任务</div>';
+        return;
+    }
+    
+    // 只显示最近 10 个
+    completedTasks.slice(0, 10).forEach(task => {
+        const card = createCompletedTaskCard(task);
+        completedList.appendChild(card);
+    });
+}
+
+// 创建已完成任务卡片
+function createCompletedTaskCard(task) {
+    const card = document.createElement('div');
+    card.className = 'task-card task-done';
+    card.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
+    card.style.border = '2px solid rgba(16, 185, 129, 0.3)';
+    
+    const tokens = task.tokenUsage || {};
+    const executionTime = task.executionTime || '-';
+    const completedTime = task.completedTime || '-';
+    const model = task.metadata?.model || '-';
+    
+    card.innerHTML = `
+        <div class="task-header">
+            <span class="task-status">✅ 已完成</span>
+            <span class="task-priority">${task.priority || 'P2'}</span>
+        </div>
+        <h3 class="task-title">${escapeHtml(task.title)}</h3>
+        ${task.assignee ? `<div class="task-assignee">👤 ${escapeHtml(task.assignee)}</div>` : ''}
+        <p class="task-desc">${escapeHtml(task.description || '')}</p>
+        <div class="task-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;padding-top:10px;border-top:2px solid rgba(16,185,129,0.15);">
+            <div style="font-size:12px;">
+                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">📊 模型</div>
+                <div style="color:#2c3e50;font-weight:600;">${model}</div>
+            </div>
+            <div style="font-size:12px;">
+                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">⏱️ 执行时间</div>
+                <div style="color:#2c3e50;font-weight:600;">${executionTime}</div>
+            </div>
+            <div style="font-size:12px;">
+                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">💬 Token</div>
+                <div style="color:#2c3e50;font-weight:600;">${(tokens.total || 0).toLocaleString()}</div>
+            </div>
+            <div style="font-size:12px;">
+                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">🕐 完成时间</div>
+                <div style="color:#2c3e50;font-weight:600;">${completedTime}</div>
+            </div>
+        </div>
+    `;
+    
+    return card;
 }
 
 // 创建任务卡片
