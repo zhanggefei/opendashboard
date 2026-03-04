@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-03-04T23:07:03+08:00",
+  "lastUpdate": "2026-03-04T23:52:07+08:00",
   "settings": {
     "autoRetry": true,
     "maxRetries": 3,
@@ -12,107 +12,73 @@
       "priority": "P1",
       "status": "progress",
       "progress": 50,
-      "description": "主对话会话 (qwen3.5-plus)",
-      "startTime": "2026-03-04 23:04",
+      "description": "与用户交互 - OpenDashboard 优化、定时任务管理、技能中心美化 (qwen3.5-plus)",
+      "startTime": "2026-03-04 23:50",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "2分钟",
+      "executionTime": "1分钟",
       "tokenUsage": {
-        "input": 3483785,
-        "output": 3437,
-        "total": 698085
+        "input": 3712330,
+        "output": 6504,
+        "total": 744911
       },
       "metadata": {
         "sessionKey": "agent:main:main",
         "kind": "direct",
         "model": "qwen3.5-plus"
       }
-    }
-  ],
-  "completedTasks": [
+    },
     {
       "id": "OC002",
-      "title": "定时任务管理页面美化",
-      "priority": "P1",
-      "status": "done",
-      "progress": 100,
-      "description": "优化定时任务管理界面设计，统一视觉风格",
-      "startTime": "2026-03-04 22:00",
-      "completedTime": "2026-03-04 22:20",
+      "title": "飞书消息处理",
+      "priority": "P2",
+      "status": "todo",
+      "progress": 0,
+      "description": "处理飞书渠道消息 (qwen3.5-plus)",
+      "startTime": "2026-02-28 11:09",
       "assignee": "狗蛋",
-      "executionTime": "20 分钟",
+      "retryCount": 0,
+      "executionTime": "108.7小时",
       "tokenUsage": {
-        "input": 8000,
-        "output": 5000,
-        "total": 13000
+        "input": 0,
+        "output": 0,
+        "total": null
       },
       "metadata": {
-        "model": "qwen3.5-plus"
-      }
-    },
-    {
-      "id": "OC003",
-      "title": "技能中心页面风格统一",
-      "priority": "P1",
-      "status": "done",
-      "progress": 100,
-      "description": "技能中心页面采用与定时任务一致的布局风格",
-      "startTime": "2026-03-04 22:20",
-      "completedTime": "2026-03-04 22:35",
-      "assignee": "狗蛋",
-      "executionTime": "15 分钟",
-      "tokenUsage": {
-        "input": 10000,
-        "output": 12000,
-        "total": 22000
-      },
-      "metadata": {
-        "model": "qwen3.5-plus"
-      }
-    },
-    {
-      "id": "OC004",
-      "title": "已完成任务整合到主页",
-      "priority": "P0",
-      "status": "done",
-      "progress": 100,
-      "description": "将已完成任务列表整合到主页显示，显示执行时间、Token 消耗",
-      "startTime": "2026-03-04 22:35",
-      "completedTime": "2026-03-04 22:45",
-      "assignee": "狗蛋",
-      "executionTime": "10 分钟",
-      "tokenUsage": {
-        "input": 6000,
-        "output": 8000,
-        "total": 14000
-      },
-      "metadata": {
-        "model": "qwen3.5-plus"
-      }
-    },
-    {
-      "id": "OC005",
-      "title": "JumpServer 对比报告生成",
-      "priority": "P0",
-      "status": "done",
-      "progress": 100,
-      "description": "生成 JumpServer vs 齐治堡垒机对比分析报告（优化版）",
-      "startTime": "2026-03-04 21:00",
-      "completedTime": "2026-03-04 21:45",
-      "assignee": "狗蛋",
-      "executionTime": "45 分钟",
-      "tokenUsage": {
-        "input": 12000,
-        "output": 18000,
-        "total": 30000
-      },
-      "metadata": {
+        "sessionKey": "agent:main:feishu:group:oc_c5bf77dfbf8d9cad06208a1aea54413d",
+        "kind": "group",
         "model": "qwen3.5-plus"
       }
     }
   ],
+  "todoTasks": [
+    {
+      "id": "OC002",
+      "title": "飞书消息处理",
+      "priority": "P2",
+      "status": "todo",
+      "progress": 0,
+      "description": "处理飞书渠道消息 (qwen3.5-plus)",
+      "startTime": "2026-02-28 11:09",
+      "assignee": "狗蛋",
+      "retryCount": 0,
+      "executionTime": "108.7小时",
+      "tokenUsage": {
+        "input": 0,
+        "output": 0,
+        "total": null
+      },
+      "metadata": {
+        "sessionKey": "agent:main:feishu:group:oc_c5bf77dfbf8d9cad06208a1aea54413d",
+        "kind": "group",
+        "model": "qwen3.5-plus"
+      }
+    }
+  ],
+  "completedTasks": [],
   "taskOrder": [
-    "OC001"
+    "OC001",
+    "OC002"
   ],
   "notifications": []
 }

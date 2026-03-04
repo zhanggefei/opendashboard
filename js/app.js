@@ -20,26 +20,32 @@ async function loadTasks() {
         
         const data = await response.json();
         tasks = data.tasks || [];
+        const todoTasks = data.todoTasks || [];
         const completedTasks = data.completedTasks || [];
         
         window.tasks = tasks;
+        window.todoTasks = todoTasks;
         window.completedTasks = completedTasks;
         
         renderIdentityTabs();
         renderTasks();
+        renderTodoTasks();
         renderCompletedTasks();
         updateStats();
         updateLastUpdate();
         
         console.log('✅ 数据已加载', new Date().toLocaleTimeString('zh-CN'));
         console.log(`   当前任务：${tasks.length} 个`);
+        console.log(`   待办任务：${todoTasks.length} 个`);
         console.log(`   已完成：${completedTasks.length} 个`);
         
     } catch (error) {
         console.error('加载任务失败:', error);
         tasks = [];
+        window.todoTasks = [];
         window.completedTasks = [];
         renderTasks();
+        renderTodoTasks();
         renderCompletedTasks();
     }
 }
@@ -50,6 +56,7 @@ let currentIdentity = 'all';
 // 渲染任务列表
 function renderTasks() {
     const taskList = document.getElementById('taskList');
+    const progressCount = document.getElementById('progressCount');
     if (!taskList) return;
     
     taskList.innerHTML = '';
@@ -64,8 +71,13 @@ function renderTasks() {
         }
     }
     
+    // 更新计数
+    if (progressCount) {
+        progressCount.textContent = `${filteredTasks.length}个`;
+    }
+    
     if (filteredTasks.length === 0) {
-        taskList.innerHTML = '<div class="empty-state">暂无当前任务</div>';
+        taskList.innerHTML = '<div class="empty-state" style="text-align:center;padding:40px;color:#9ca3af;">暂无当前任务</div>';
         return;
     }
     
@@ -75,17 +87,80 @@ function renderTasks() {
     });
 }
 
+// 渲染待办任务
+function renderTodoTasks() {
+    const todoList = document.getElementById('todoTaskList');
+    if (!todoList) return;
+    
+    todoList.innerHTML = '';
+    
+    const todoTasks = window.todoTasks || [];
+    
+    if (todoTasks.length === 0) {
+        todoList.innerHTML = '<div class="empty-state">暂无待办任务</div>';
+        return;
+    }
+    
+    todoTasks.forEach(task => {
+        const card = createTodoTaskCard(task);
+        todoList.appendChild(card);
+    });
+}
+
+// 创建待办任务卡片
+function createTodoTaskCard(task) {
+    const card = document.createElement('div');
+    card.className = 'task-card task-todo';
+    card.style.background = 'white';
+    card.style.border = '2px solid #f59e0b';
+    card.style.borderRadius = '12px';
+    card.style.padding = '18px';
+    card.style.boxShadow = '0 2px 8px rgba(245,158,11,0.15)';
+    
+    const tokens = task.tokenUsage || {};
+    const executionTime = task.executionTime || '-';
+    const startTime = task.startTime || '-';
+    
+    card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;">🆕 待办</span>
+                <span style="background:#f3f4f6;color:#6b7280;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;">${task.priority || 'P2'}</span>
+            </div>
+            <span style="font-size:11px;color:#9ca3af;">${startTime.split(' ')[0] || ''}</span>
+        </div>
+        
+        <h3 style="margin:0 0 6px 0;font-size:15px;font-weight:700;color:#1f2937;line-height:1.4;">${escapeHtml(task.title)}</h3>
+        
+        <p style="margin:0 0 12px 0;color:#6b7280;font-size:12px;line-height:1.5;">${escapeHtml(task.description || '')}</p>
+        
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">⏰ ${executionTime}</span>
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">💬 ${(tokens.total || 0).toLocaleString()}</span>
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">🕐 ${startTime.split(' ')[1] || startTime}</span>
+        </div>
+    `;
+    
+    return card;
+}
+
 // 渲染已完成任务
 function renderCompletedTasks() {
     const completedList = document.getElementById('completedTaskList');
+    const completedCount = document.getElementById('completedCount');
     if (!completedList) return;
     
     completedList.innerHTML = '';
     
     const completedTasks = window.completedTasks || [];
     
+    // 更新计数
+    if (completedCount) {
+        completedCount.textContent = `${completedTasks.length}个`;
+    }
+    
     if (completedTasks.length === 0) {
-        completedList.innerHTML = '<div class="empty-state">暂无已完成任务</div>';
+        completedList.innerHTML = '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px;color:#9ca3af;">暂无已完成任务</div>';
         return;
     }
     
@@ -100,8 +175,11 @@ function renderCompletedTasks() {
 function createCompletedTaskCard(task) {
     const card = document.createElement('div');
     card.className = 'task-card task-done';
-    card.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
-    card.style.border = '2px solid rgba(16, 185, 129, 0.3)';
+    card.style.background = 'white';
+    card.style.border = '2px solid #10b981';
+    card.style.borderRadius = '12px';
+    card.style.padding = '18px';
+    card.style.boxShadow = '0 2px 8px rgba(16,185,129,0.15)';
     
     const tokens = task.tokenUsage || {};
     const executionTime = task.executionTime || '-';
@@ -109,30 +187,23 @@ function createCompletedTaskCard(task) {
     const model = task.metadata?.model || '-';
     
     card.innerHTML = `
-        <div class="task-header">
-            <span class="task-status">✅ 已完成</span>
-            <span class="task-priority">${task.priority || 'P2'}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;">✅ 已完成</span>
+                <span style="background:#f3f4f6;color:#6b7280;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;">${task.priority || 'P2'}</span>
+            </div>
+            <span style="font-size:11px;color:#9ca3af;">${completedTime.split(' ')[0] || ''}</span>
         </div>
-        <h3 class="task-title">${escapeHtml(task.title)}</h3>
-        ${task.assignee ? `<div class="task-assignee">👤 ${escapeHtml(task.assignee)}</div>` : ''}
-        <p class="task-desc">${escapeHtml(task.description || '')}</p>
-        <div class="task-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;padding-top:10px;border-top:2px solid rgba(16,185,129,0.15);">
-            <div style="font-size:12px;">
-                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">📊 模型</div>
-                <div style="color:#2c3e50;font-weight:600;">${model}</div>
-            </div>
-            <div style="font-size:12px;">
-                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">⏱️ 执行时间</div>
-                <div style="color:#2c3e50;font-weight:600;">${executionTime}</div>
-            </div>
-            <div style="font-size:12px;">
-                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">💬 Token</div>
-                <div style="color:#2c3e50;font-weight:600;">${(tokens.total || 0).toLocaleString()}</div>
-            </div>
-            <div style="font-size:12px;">
-                <div style="color:#95a5a6;font-size:10px;text-transform:uppercase;">🕐 完成时间</div>
-                <div style="color:#2c3e50;font-weight:600;">${completedTime}</div>
-            </div>
+        
+        <h3 style="margin:0 0 6px 0;font-size:15px;font-weight:700;color:#1f2937;line-height:1.4;">${escapeHtml(task.title)}</h3>
+        
+        <p style="margin:0 0 12px 0;color:#6b7280;font-size:12px;line-height:1.5;">${escapeHtml(task.description || '')}</p>
+        
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">📊 ${model}</span>
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">⏱️ ${executionTime}</span>
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">💬 ${(tokens.total || 0).toLocaleString()}</span>
+            <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">🕐 ${completedTime.split(' ')[1] || completedTime}</span>
         </div>
     `;
     
@@ -143,6 +214,11 @@ function createCompletedTaskCard(task) {
 function createTaskCard(task) {
     const card = document.createElement('div');
     card.className = `task-card task-${task.status}`;
+    card.style.background = 'white';
+    card.style.border = '2px solid #3b82f6';
+    card.style.borderRadius = '12px';
+    card.style.padding = '18px';
+    card.style.boxShadow = '0 2px 8px rgba(59,130,246,0.15)';
     
     const statusLabels = {
         done: '✅ 已完成',
@@ -153,19 +229,30 @@ function createTaskCard(task) {
     
     const statusLabel = statusLabels[task.status] || task.status;
     const priorityLabel = task.priority || 'P2';
+    const tokens = task.tokenUsage || {};
+    const executionTime = task.executionTime || '-';
     
     card.innerHTML = `
-        <div class="task-header">
-            <span class="task-status">${statusLabel}</span>
-            <span class="task-priority">${priorityLabel}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;">${statusLabel}</span>
+                <span style="background:#f3f4f6;color:#6b7280;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;">${priorityLabel}</span>
+            </div>
+            <span style="font-size:11px;color:#9ca3af;">${task.startTime ? task.startTime.split(' ')[0] : ''}</span>
         </div>
-        <h3 class="task-title">${escapeHtml(task.title)}</h3>
-        ${task.assignee ? `<div class="task-assignee">👤 ${escapeHtml(task.assignee)}</div>` : ''}
-        <p class="task-desc">${escapeHtml(task.description || '')}</p>
-        <div class="task-meta">
-            ${task.startTime ? `<span>开始：${task.startTime}</span>` : ''}
-            ${task.completedTime ? `<span>完成：${task.completedTime}</span>` : ''}
+        
+        <h3 style="margin:0 0 6px 0;font-size:15px;font-weight:700;color:#1f2937;line-height:1.4;">${escapeHtml(task.title)}</h3>
+        
+        ${task.assignee ? `<p style="margin:0 0 8px 0;color:#6b7280;font-size:12px;">👤 ${escapeHtml(task.assignee)}</p>` : ''}
+        <p style="margin:0 0 12px 0;color:#6b7280;font-size:12px;line-height:1.5;">${escapeHtml(task.description || '')}</p>
+        
+        ${task.status === 'progress' ? `
+        <div style="display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:2px solid #e5e7eb;">
+            <span style="background:#eff6ff;color:#3b82f6;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;">⏱️ ${executionTime}</span>
+            <span style="background:#eff6ff;color:#3b82f6;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;">💬 ${(tokens.total || 0).toLocaleString()}</span>
+            <span style="background:#eff6ff;color:#3b82f6;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;">🕐 ${task.startTime ? task.startTime.split(' ')[1] : '-'}</span>
         </div>
+        ` : ''}
     `;
     
     return card;

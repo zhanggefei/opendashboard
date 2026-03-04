@@ -133,7 +133,8 @@
         }
         
         .cron-grid {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: 15px;
         }
         
@@ -141,7 +142,7 @@
             background: linear-gradient(135deg, #f8f9ff 0%, #f3f4f6 100%);
             border: 2px solid rgba(102, 126, 234, 0.2);
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
@@ -170,34 +171,34 @@
         .cron-card-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
         
         .cron-icon {
-            font-size: 28px;
-            width: 45px;
-            height: 45px;
+            font-size: 32px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             flex-shrink: 0;
         }
         
         .cron-name {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: #2c3e50;
             flex: 1;
         }
         
         .cron-status {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -216,58 +217,56 @@
         
         .cron-description {
             color: #7f8c8d;
-            font-size: 12px;
-            margin-bottom: 12px;
+            font-size: 13px;
+            margin-bottom: 15px;
             line-height: 1.5;
         }
         
         .cron-schedule {
             background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 10px 15px;
+            border-radius: 10px;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 13px;
             color: #667eea;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             display: inline-block;
         }
         
-        .cron-info {
+        .cron-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            padding-top: 12px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding-top: 15px;
             border-top: 2px solid rgba(102, 126, 234, 0.15);
         }
         
-        .cron-info-item {
+        .cron-stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .cron-stat-icon {
+            font-size: 16px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
         
-        .cron-info-icon {
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        
-        .cron-info-label {
-            font-size: 10px;
+        .cron-stat-label {
+            font-size: 11px;
             color: #95a5a6;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            flex-shrink: 0;
         }
         
-        .cron-info-value {
-            font-size: 12px;
+        .cron-stat-value {
+            font-size: 15px;
             color: #2c3e50;
-            font-weight: 600;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-weight: 700;
         }
         
         .empty-state {
@@ -293,12 +292,8 @@
                 font-size: 20px;
             }
             
-            .stats-bar {
+            .cron-stats {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .cron-info {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -333,8 +328,8 @@
                 <div class="stat-label">✅ 运行中</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="statPaused">0</div>
-                <div class="stat-label">⏸️ 已暂停</div>
+                <div class="stat-number" id="statExecuted">0</div>
+                <div class="stat-label">🔄 总执行</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="statNext">-</div>
@@ -419,11 +414,14 @@
                 const statusClass = enabled ? 'active' : 'paused';
                 const statusText = enabled ? '运行中' : '已暂停';
                 
-                const nextRun = job.state?.nextRunAtMs ? 
-                    new Date(job.state.nextRunAtMs).toLocaleString('zh-CN') : '未设置';
+                // 计算执行次数
+                const executedCount = job.state?.lastRunAtMs ? '多次' : '0';
                 const lastRun = job.state?.lastRunAtMs ? 
-                    new Date(job.state.lastRunAtMs).toLocaleString('zh-CN') : '从未执行';
+                    new Date(job.state.lastRunAtMs).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'}) : '未执行';
+                const nextRun = job.state?.nextRunAtMs ? 
+                    new Date(job.state.nextRunAtMs).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'}) : '未设置';
                 const lastStatus = job.state?.lastRunStatus || job.state?.lastStatus || '-';
+                const statusIcon = lastStatus === 'ok' ? '✅' : (lastStatus === '-' ? '⏳' : '❌');
 
                 return `
                     <div class="cron-card ${statusClass}">
@@ -439,26 +437,34 @@
                             📅 ${schedule}
                         </div>
                         
-                        <div class="cron-info">
-                            <div class="cron-info-item">
-                                <span class="cron-info-icon">🕐</span>
-                                <span class="cron-info-label">下次执行</span>
-                                <span class="cron-info-value" title="${nextRun}">${nextRun.split(' ')[1] || nextRun}</span>
+                        <div class="cron-stats">
+                            <div class="cron-stat-item">
+                                <div class="cron-stat-icon">
+                                    <span>🔄</span>
+                                    <span class="cron-stat-label">执行次数</span>
+                                </div>
+                                <div class="cron-stat-value">${executedCount}</div>
                             </div>
-                            <div class="cron-info-item">
-                                <span class="cron-info-icon">📝</span>
-                                <span class="cron-info-label">最后执行</span>
-                                <span class="cron-info-value" title="${lastRun}">${lastRun.split(' ')[1] || lastRun}</span>
+                            <div class="cron-stat-item">
+                                <div class="cron-stat-icon">
+                                    <span>🕐</span>
+                                    <span class="cron-stat-label">上次执行</span>
+                                </div>
+                                <div class="cron-stat-value">${lastRun}</div>
                             </div>
-                            <div class="cron-info-item">
-                                <span class="cron-info-icon">✅</span>
-                                <span class="cron-info-label">状态</span>
-                                <span class="cron-info-value">${lastStatus}</span>
+                            <div class="cron-stat-item">
+                                <div class="cron-stat-icon">
+                                    <span>⏰</span>
+                                    <span class="cron-stat-label">下次执行</span>
+                                </div>
+                                <div class="cron-stat-value">${nextRun}</div>
                             </div>
-                            <div class="cron-info-item">
-                                <span class="cron-info-icon">⚙️</span>
-                                <span class="cron-info-label">时区</span>
-                                <span class="cron-info-value">${job.timezone || 'Asia/Shanghai'}</span>
+                            <div class="cron-stat-item">
+                                <div class="cron-stat-icon">
+                                    <span>${statusIcon}</span>
+                                    <span class="cron-stat-label">最后状态</span>
+                                </div>
+                                <div class="cron-stat-value">${lastStatus}</div>
                             </div>
                         </div>
                     </div>
@@ -471,8 +477,16 @@
         function updateStats() {
             const total = cronJobs.length;
             const active = cronJobs.filter(j => j.enabled !== false).length;
-            const paused = total - active;
             
+            // 计算总执行次数（简化显示）
+            let totalExecuted = 0;
+            cronJobs.forEach(job => {
+                if (job.state?.lastRunAtMs) {
+                    totalExecuted++;
+                }
+            });
+            
+            // 计算下次执行时间（最近的）
             let nextRunTime = null;
             cronJobs.forEach(job => {
                 if (job.enabled !== false && job.state?.nextRunAtMs) {
@@ -484,7 +498,7 @@
             
             document.getElementById('statTotal').textContent = total;
             document.getElementById('statActive').textContent = active;
-            document.getElementById('statPaused').textContent = paused;
+            document.getElementById('statExecuted').textContent = totalExecuted > 0 ? `${totalExecuted}个` : '-';
             document.getElementById('statNext').textContent = nextRunTime ? 
                 new Date(nextRunTime).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'}) : '-';
         }
