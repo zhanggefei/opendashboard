@@ -152,20 +152,22 @@ function createTaskCard(task, type) {
     const startTime = task.startTime || '-';
     const completedTime = task.completedTime || '-';
     
-    // 第一行：标题 + 优先级 + 状态
-    // 第二行：负责人 + 描述
+    // 第一行：标题 + 负责人 + 优先级 + 状态
+    // 第二行：描述
     // 第三行：统计信息（执行时长、Token、时间）
     card.innerHTML = `
         <div style="margin-bottom:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <h3 style="margin:0;font-size:15px;font-weight:700;color:#1f2937;">${escapeHtml(task.title)}</h3>
+                <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
+                    <h3 style="margin:0;font-size:15px;font-weight:700;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(task.title)}</h3>
+                    ${task.assignee ? `<span style="color:#6b7280;font-size:12px;white-space:nowrap;">👤 ${escapeHtml(task.assignee)}</span>` : ''}
+                </div>
                 <div style="display:flex;gap:6px;flex-shrink:0;">
                     <span style="background:#f3f4f6;color:#6b7280;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">${priorityLabel}</span>
                     <span style="background:linear-gradient(135deg,${getGradientColor(type)});color:white;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">${statusLabel}</span>
                 </div>
             </div>
             
-            ${task.assignee ? `<p style="margin:0 0 6px 0;color:#6b7280;font-size:12px;">👤 ${escapeHtml(task.assignee)}</p>` : ''}
             <p style="margin:0;color:#6b7280;font-size:12px;line-height:1.5;">${escapeHtml(task.description || '')}</p>
         </div>
         
