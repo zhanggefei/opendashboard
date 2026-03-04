@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-03-05T01:32:27+08:00",
+  "lastUpdate": "2026-03-05T01:32:42+08:00",
   "settings": {
     "autoRetry": true,
     "maxRetries": 3,
@@ -16,7 +16,7 @@
       "startTime": "2026-03-05 01:30",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "2分钟",
+      "executionTime": "3分钟",
       "tokenUsage": {
         "input": 1653160,
         "output": 1066,

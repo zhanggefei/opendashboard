@@ -7,13 +7,7 @@ window.completedTasks = [];
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
-    // 触发后台同步脚本，获取最新状态
-    fetch('/refresh_data.sh').catch(() => {});
-    
-    // 等待 500ms 后加载任务（给同步脚本时间）
-    setTimeout(() => {
-        loadTasks();
-    }, 500);
+    loadTasks();
 });
 
 // 加载任务
