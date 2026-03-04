@@ -154,11 +154,11 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border: 2px solid rgba(102, 126, 234, 0.3);
         }
         .platform-skills-header {
-            background: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
             display: flex;
             justify-content: space-between;
@@ -166,26 +166,27 @@
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.15);
+            border-bottom: none;
             border-radius: 12px 12px 0 0;
         }
         .platform-skills-header:hover {
-            background: #f8f9ff;
+            background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
         }
         .platform-skills-header h3 {
             margin: 0;
-            color: #555;
+            color: white;
             font-size: 18px;
             font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         #platformSkillsToggleIcon {
             font-size: 20px;
             cursor: pointer;
             transition: transform 0.3s;
-            color: #667eea;
+            color: white;
         }
         #platformSkillsContent {
-            background: #f8f9fa;
+            background: white;
             padding: 20px;
             transition: all 0.3s;
             max-height: 2000px;
@@ -205,22 +206,24 @@
         }
         .skills-tab {
             padding: 8px 16px;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
             border-radius: 20px;
-            color: white;
+            color: #555;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 13px;
             font-weight: 600;
         }
         .skills-tab:hover {
-            background: rgba(255,255,255,0.3);
+            background: #e5e7eb;
+            border-color: #667eea;
         }
         .skills-tab.active {
-            background: white;
-            color: #667eea;
-            border-color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
         .platform-skills-grid {
             display: grid;
