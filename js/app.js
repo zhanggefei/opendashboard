@@ -173,22 +173,22 @@ function createTaskCard(task, type) {
             <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:18px;">⏱️</span>
                 <div>
-                    <div style="font-size:15px;font-weight:700;color:#3b82f6;">${executionTime}</div>
                     <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;">${type === 'todo' ? '等待时长' : '执行时长'}</div>
+                    <div style="font-size:15px;font-weight:700;color:#3b82f6;">${executionTime}</div>
                 </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:18px;">💬</span>
                 <div>
-                    <div style="font-size:15px;font-weight:700;color:#10b981;">${(tokens.total || 0).toLocaleString()}</div>
                     <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;">Token</div>
+                    <div style="font-size:15px;font-weight:700;color:#10b981;">${(tokens.total || 0).toLocaleString()}</div>
                 </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:18px;">🕐</span>
                 <div>
-                    <div style="font-size:15px;font-weight:700;color:#f59e0b;">${type === 'done' ? (completedTime.split(' ')[1] || completedTime) : startTime}</div>
                     <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;">${type === 'done' ? '完成时间' : '开始时间'}</div>
+                    <div style="font-size:15px;font-weight:700;color:#f59e0b;">${type === 'done' ? (completedTime.split(' ')[1] || completedTime) : startTime}</div>
                 </div>
             </div>
         </div>
