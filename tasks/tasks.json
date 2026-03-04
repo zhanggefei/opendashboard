@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-03-05T01:32:42+08:00",
+  "lastUpdate": "2026-03-05T01:46:57+08:00",
   "settings": {
     "autoRetry": true,
     "maxRetries": 3,
@@ -13,14 +13,14 @@
       "status": "progress",
       "progress": 50,
       "description": "与用户交互 - OpenDashboard 优化、定时任务管理、技能中心美化 (qwen3.5-plus)",
-      "startTime": "2026-03-05 01:30",
+      "startTime": "2026-03-05 01:45",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "3分钟",
+      "executionTime": "2分钟",
       "tokenUsage": {
-        "input": 1653160,
-        "output": 1066,
-        "total": 826698
+        "input": 15046687,
+        "output": 2578,
+        "total": 837724
       },
       "metadata": {
         "sessionKey": "agent:main:main",
@@ -33,13 +33,13 @@
       "id": "OC002",
       "title": "📧 飞书消息处理",
       "priority": "P2",
-      "status": "done",
-      "progress": 100,
+      "status": "todo",
+      "progress": 0,
       "description": "处理飞书渠道消息 (qwen3.5-plus)",
       "startTime": "2026-02-28 11:09",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "110.4小时",
+      "executionTime": "110.6小时",
       "tokenUsage": {
         "input": 0,
         "output": 0,
@@ -53,7 +53,31 @@
       }
     }
   ],
-  "todoTasks": [],
+  "todoTasks": [
+    {
+      "id": "OC002",
+      "title": "📧 飞书消息处理",
+      "priority": "P2",
+      "status": "todo",
+      "progress": 0,
+      "description": "处理飞书渠道消息 (qwen3.5-plus)",
+      "startTime": "2026-02-28 11:09",
+      "assignee": "狗蛋",
+      "retryCount": 0,
+      "executionTime": "110.6小时",
+      "tokenUsage": {
+        "input": 0,
+        "output": 0,
+        "total": null
+      },
+      "metadata": {
+        "sessionKey": "agent:main:feishu:group:oc_c5bf77dfbf8d9cad06208a1aea54413d",
+        "kind": "group",
+        "model": "qwen3.5-plus",
+        "source": "feishu"
+      }
+    }
+  ],
   "completedTasks": [
     {
       "id": "OC003",
