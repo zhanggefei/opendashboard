@@ -2,30 +2,30 @@
   "version": 1,
   "jobs": [
     {
-      "name": "飞书渠道健康检查",
+      "name": "狗蛋思考同步",
       "schedule": {
         "kind": "cron",
-        "expr": "*/5 * * * *"
+        "expr": "0 */30 * * *",
+        "staggerMs": 300000
       },
-      "description": "每 5 分钟检查飞书渠道状态，发现异常立即通知主人",
-      "enabled": true,
+      "description": "每 30 分钟同步狗蛋的思考记录到飞书",
+      "enabled": false,
       "timezone": "Asia/Shanghai",
       "wakeMode": "now",
       "payload": {
         "kind": "systemEvent",
-        "text": "python3 /Users/zhang/.openclaw/workspace/check_feishu_health.py"
+        "text": "python3 /Users/zhang/.openclaw/workspace/sync_thoughts_to_feishu.py"
       },
       "sessionTarget": "main",
       "state": {
-        "nextRunAtMs": 1772599200000,
-        "lastRunAtMs": 1772598901512,
+        "lastRunAtMs": 1772631001761,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 26162,
+        "lastDurationMs": 219607,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       },
-      "updatedAtMs": 1772598927674
+      "updatedAtMs": 1772631221368
     },
     {
       "name": "Alpaca 股票日报",
@@ -56,7 +56,8 @@
       "enabled": true,
       "timezone": "Asia/Shanghai",
       "state": {
-        "nextRunAtMs": 1772631000000
+        "nextRunAtMs": 1772631000000,
+        "runningAtMs": 1772631001757
       },
       "wakeMode": "now",
       "payload": {
@@ -69,9 +70,9 @@
       "name": "OpenDashboard 任务同步",
       "schedule": {
         "kind": "cron",
-        "expr": "* * * * *"
+        "expr": "*/1 * * * *"
       },
-      "description": "每 1 分钟同步 OpenClaw 任务状态到 OpenDashboard",
+      "description": "每 1 分钟同步 OpenClaw 任务状态到 OpenDashboard（页面刷新时自动获取最新数据）",
       "enabled": true,
       "timezone": "Asia/Shanghai",
       "wakeMode": "now",
@@ -81,8 +82,46 @@
       },
       "sessionTarget": "main",
       "state": {
-        "nextRunAtMs": 1772598480000,
-        "runningAtMs": 1772598480008
+        "nextRunAtMs": 1772625780000,
+        "runningAtMs": 1772625780007
+      }
+    },
+    {
+      "name": "CRM 每日早晨报告",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 7 * * *"
+      },
+      "description": "每天早上 7 点推荐 40 个今日应跟进客户",
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py morning"
+      },
+      "sessionTarget": "main",
+      "state": {
+        "nextRunAtMs": 1772665200000
+      }
+    },
+    {
+      "name": "CRM 每日晚上报告",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 18 * * *"
+      },
+      "description": "每天晚上 6 点分析当日客户跟进情况",
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py evening"
+      },
+      "sessionTarget": "main",
+      "state": {
+        "nextRunAtMs": 1772704800000
       }
     }
   ]

@@ -57,6 +57,9 @@
         .cron-card.active {
             border-left: 4px solid #10b981;
         }
+        .cron-card.paused {
+            border-left: 4px solid #f59e0b;
+        }
         .cron-card-header {
             display: flex;
             align-items: center;
@@ -82,9 +85,9 @@
             background: rgba(16, 185, 129, 0.15);
             color: #059669;
         }
-        .cron-status.pending {
-            background: rgba(107, 114, 128, 0.15);
-            color: #6b7280;
+        .cron-status.paused {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
         }
         .cron-info {
             display: grid;
@@ -108,23 +111,6 @@
             font-size: 14px;
             color: #1f2937;
             font-family: monospace;
-        }
-        .cron-description {
-            color: #6b7280;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        .cron-schedule {
-            background: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 13px;
-            color: #667eea;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            display: inline-block;
-            margin-top: 5px;
         }
         .empty-state {
             text-align: center;
@@ -152,14 +138,18 @@
     </div>
 
     <script>
-        // 从云端加载定时任务
+        // 定时任务数据
+        let cronJobs = [];
+
+        // 加载定时任务
         async function loadCronJobs() {
             try {
                 const response = await fetch('tasks/cron_jobs.json');
                 if (!response.ok) throw new Error('无法加载任务数据');
                 
                 const data = await response.json();
-                renderCronJobs(data.jobs || []);
+                cronJobs = data.jobs || [];
+                renderCronJobs();
             } catch (error) {
                 console.error('加载定时任务失败:', error);
                 document.getElementById('cronList').innerHTML = `
@@ -172,10 +162,11 @@
             }
         }
 
-        function renderCronJobs(jobs) {
+        // 渲染定时任务
+        function renderCronJobs() {
             const container = document.getElementById('cronList');
             
-            if (jobs.length === 0) {
+            if (cronJobs.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📭</div>
@@ -188,31 +179,34 @@
 
             const icons = {
                 '飞书': '📧',
+                'CRM': '📊',
                 'Alpaca': '📈',
                 'OpenDashboard': '📊',
-                '健康': '🏥',
-                '股票': '💰',
-                '交易': '💹',
-                '同步': '🔄'
+                '狗蛋': '🤖',
+                '思考': '💭'
             };
 
-            const html = jobs.map(job => {
-                const icon = Object.entries(icons).find(([key]) => job.name.includes(key))?.[1] || '⏰';
+            const html = cronJobs.map(job => {
+                const name = job.name;
+                const icon = Object.entries(icons).find(([key]) => name.includes(key))?.[1] || '⏰';
+                const schedule = job.schedule?.expr || job.schedule || '未知';
+                const enabled = job.enabled !== false;
+                const statusClass = enabled ? 'active' : 'paused';
+                const statusText = enabled ? '✅ 已启用' : '⏸️ 已暂停';
                 const nextRun = job.state?.nextRunAtMs ? new Date(job.state.nextRunAtMs).toLocaleString('zh-CN') : '未设置';
                 const lastRun = job.state?.lastRunAtMs ? new Date(job.state.lastRunAtMs).toLocaleString('zh-CN') : '未执行';
-                const status = job.enabled ? 'active' : 'pending';
-                const statusText = job.enabled ? '✅ 已启用' : '⏸️ 已暂停';
+                const lastStatus = job.state?.lastRunStatus || job.state?.lastStatus || '-';
 
                 return `
-                    <div class="cron-card ${status}">
+                    <div class="cron-card ${statusClass}">
                         <div class="cron-card-header">
                             <span class="cron-icon">${icon}</span>
-                            <span class="cron-name">${job.name}</span>
-                            <span class="cron-status ${status}">${statusText}</span>
+                            <span class="cron-name">${name}</span>
+                            <span class="cron-status ${statusClass}">${statusText}</span>
                         </div>
-                        <p class="cron-description">${job.description || '暂无描述'}</p>
-                        <div>
-                            <span class="cron-schedule">${job.schedule?.expr || job.schedule || '未知'}</span>
+                        <p style="color:#6b7280;font-size:14px;margin-bottom:10px;">${job.description || '暂无描述'}</p>
+                        <div style="background:white;padding:8px 12px;border-radius:6px;font-family:monospace;font-size:13px;color:#667eea;">
+                            📅 ${schedule}
                         </div>
                         <div class="cron-info">
                             <div class="cron-info-item">
@@ -224,15 +218,13 @@
                                 <span class="cron-info-value">${lastRun}</span>
                             </div>
                             <div class="cron-info-item">
+                                <span class="cron-info-label">✅ 最后状态</span>
+                                <span class="cron-info-value">${lastStatus}</span>
+                            </div>
+                            <div class="cron-info-item">
                                 <span class="cron-info-label">⚙️ 时区</span>
                                 <span class="cron-info-value">${job.timezone || 'Asia/Shanghai'}</span>
                             </div>
-                            ${job.state?.lastRunStatus ? `
-                            <div class="cron-info-item">
-                                <span class="cron-info-label">✅ 最后状态</span>
-                                <span class="cron-info-value">${job.state.lastRunStatus}</span>
-                            </div>
-                            ` : ''}
                         </div>
                     </div>
                 `;
