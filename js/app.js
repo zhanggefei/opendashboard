@@ -27,6 +27,8 @@ async function loadTasks() {
         updateStats();
         updateLastUpdate();
         
+        console.log('✅ 数据已加载', new Date().toLocaleTimeString('zh-CN'));
+        
     } catch (error) {
         console.error('加载任务失败:', error);
         tasks = [];
@@ -95,6 +97,15 @@ function createTaskCard(task) {
     `;
     
     return card;
+}
+
+// 更新时间显示
+function updateLastUpdate() {
+    const el = document.getElementById('lastUpdate');
+    if (el) {
+        const now = new Date();
+        el.textContent = `最后更新：${now.toLocaleTimeString('zh-CN')}`;
+    }
 }
 
 // 更新统计

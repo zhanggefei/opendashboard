@@ -204,17 +204,35 @@
     <script src="js/identity.js"></script>
     <script src="js/app.js"></script>
     <script>
-        // 初始化身份管理
-        window.identityManager = new IdentityManager();
-        renderIdentityTabs();
-        
-        // 技能区域默认隐藏，点击身份后才显示
-        const skillsSection = document.getElementById('skillsSection');
-        if (skillsSection) {
-            skillsSection.style.display = 'none';
+        // 页面加载时主动刷新数据
+        async function refreshDataOnLoad() {
+            console.log('🔄 页面加载，获取最新数据...');
+            
+            try {
+                // 触发后台刷新脚本
+                fetch('/refresh_data.sh').catch(() => {});
+                
+                // 等待 500ms 后加载任务（给刷新脚本时间）
+                setTimeout(() => {
+                    // 初始化身份管理
+                    window.identityManager = new IdentityManager();
+                    renderIdentityTabs();
+                    
+                    // 技能区域默认隐藏，点击身份后才显示
+                    const skillsSection = document.getElementById('skillsSection');
+                    if (skillsSection) {
+                        skillsSection.style.display = 'none';
+                    }
+                    
+                    loadTasks();
+                }, 500);
+            } catch (error) {
+                console.error('刷新数据失败:', error);
+                loadTasks();
+            }
         }
         
-        loadTasks();
+        refreshDataOnLoad();
     </script>
 </body>
 </html>
