@@ -25,21 +25,6 @@ class IdentityManager {
                 tasks: []
             },
             {
-                id: 'crm_analyst',
-                name: 'CRM 数据分析师',
-                icon: '📊',
-                color: '#10b981',
-                description: '分析客户数据，提供分级和跟进建议',
-                skills: [
-                    { name: '客户分级', icon: '🎯', level: 95, component: 'feishu-bitable' },
-                    { name: '跟进分析', icon: '📈', level: 90, component: 'feishu-bitable' },
-                    { name: '数据清洗', icon: '🧹', level: 85, component: 'openclaw-memory' },
-                    { name: '趋势预测', icon: '🔮', level: 80, component: 'web-search' },
-                    { name: '报表生成', icon: '📋', level: 95, component: 'feishu-doc' }
-                ],
-                tasks: []
-            },
-            {
                 id: 'developer',
                 name: 'OpenDashboard 开发者',
                 icon: '💻',
