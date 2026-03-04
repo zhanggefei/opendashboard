@@ -171,12 +171,38 @@ function renderSkills(identityId) {
 // 导出 renderSkills 函数
 window.renderSkills = renderSkills;
 
+// 渲染身份页签
+function renderIdentityTabs() {
+    const container = document.getElementById('identityTabs');
+    if (!container) return;
+
+    const html = window.identityManager.identities.map(identity => {
+        const isActive = identity.id === window.identityManager.currentIdentity;
+        return `
+            <div class="identity-tab ${isActive ? 'active' : ''}" onclick="switchIdentity('${identity.id}')">
+                ${identity.icon} ${identity.name.split(' - ')[0]}
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = html;
+}
+
+// 导出 renderIdentityTabs 函数
+window.renderIdentityTabs = renderIdentityTabs;
+
 // 切换身份
 function switchIdentity(identityId) {
     window.identityManager.switchIdentity(identityId);
-    renderIdentities();
+    renderIdentityTabs();
     renderTasks();
     renderSkills(identityId);
+    
+    // 显示技能区域
+    const skillsSection = document.getElementById('skillsSection');
+    if (skillsSection) {
+        skillsSection.style.display = 'block';
+    }
 }
 
 // 渲染任务列表
