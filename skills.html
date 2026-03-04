@@ -23,12 +23,13 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .header-content h1 {
-            color: #333;
+            color: white;
             font-size: 28px;
             margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .subtitle {
-            color: #666;
+            color: rgba(255,255,255,0.9);
             font-size: 14px;
         }
         .back-btn {
@@ -99,6 +100,34 @@
         .skill-card:hover .skill-component {
             background: rgba(255,255,255,0.2);
             color: white;
+        }
+        .skill-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .skill-status.used {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .skill-status.unused {
+            background: rgba(107, 114, 128, 0.2);
+            color: #6b7280;
+            border: 1px solid rgba(107, 114, 128, 0.3);
+        }
+        .skill-card:hover .skill-status.used {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            border-color: rgba(255,255,255,0.4);
+        }
+        .skill-card:hover .skill-status.unused {
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.7);
+            border-color: rgba(255,255,255,0.3);
         }
         .skill-header {
             display: flex;
@@ -203,17 +232,18 @@
 
     <script>
         // OpenClaw 完整技能列表
+        // used: true=已使用，false=未使用
         const skillsData = [
             // 数据分析
             {
                 category: '📊 数据分析',
                 icon: '📊',
                 skills: [
-                    { name: 'memory_search', icon: '🧠', desc: '语义化搜索记忆文件，支持多关键词匹配', component: 'memory-core' },
-                    { name: 'memory_get', icon: '📖', desc: '读取记忆文件片段，精确获取上下文', component: 'memory-core' },
-                    { name: 'web_search', icon: '🌐', desc: 'Brave Search API 搜索，支持区域和语言过滤', component: 'brave-api' },
-                    { name: 'image', icon: '🖼️', desc: '视觉模型分析单张或多张图片', component: 'vision-model' },
-                    { name: 'pdf', icon: '📄', desc: 'PDF 文档分析，支持文本提取和模型分析', component: 'pdf-parser' }
+                    { name: 'memory_search', icon: '🧠', desc: '语义化搜索记忆文件，支持多关键词匹配', component: 'memory-core', used: true },
+                    { name: 'memory_get', icon: '📖', desc: '读取记忆文件片段，精确获取上下文', component: 'memory-core', used: true },
+                    { name: 'web_search', icon: '🌐', desc: 'Brave Search API 搜索，支持区域和语言过滤', component: 'brave-api', used: true },
+                    { name: 'image', icon: '🖼️', desc: '视觉模型分析单张或多张图片', component: 'vision-model', used: true },
+                    { name: 'pdf', icon: '📄', desc: 'PDF 文档分析，支持文本提取和模型分析', component: 'pdf-parser', used: false }
                 ]
             },
             // CRM 管理
@@ -221,14 +251,14 @@
                 category: '👥 CRM 管理',
                 icon: '👥',
                 skills: [
-                    { name: 'feishu_bitable_get_meta', icon: '📋', desc: '解析飞书多维表格 URL，获取表结构', component: 'feishu-api' },
-                    { name: 'feishu_bitable_list_fields', icon: '📑', desc: '列出多维表格所有字段及类型', component: 'feishu-api' },
-                    { name: 'feishu_bitable_list_records', icon: '📝', desc: '分页查询多维表格记录', component: 'feishu-api' },
-                    { name: 'feishu_bitable_get_record', icon: '🔍', desc: '根据 ID 获取单条记录详情', component: 'feishu-api' },
-                    { name: 'feishu_bitable_create_record', icon: '➕', desc: '创建新的多维表格记录', component: 'feishu-api' },
-                    { name: 'feishu_bitable_update_record', icon: '✏️', desc: '更新现有记录', component: 'feishu-api' },
-                    { name: 'feishu_bitable_create_field', icon: '📊', desc: '创建新的表格字段', component: 'feishu-api' },
-                    { name: 'feishu_bitable_create_app', icon: '🆕', desc: '创建新的多维表格应用', component: 'feishu-api' }
+                    { name: 'feishu_bitable_get_meta', icon: '📋', desc: '解析飞书多维表格 URL，获取表结构', component: 'feishu-api', used: true },
+                    { name: 'feishu_bitable_list_fields', icon: '📑', desc: '列出多维表格所有字段及类型', component: 'feishu-api', used: true },
+                    { name: 'feishu_bitable_list_records', icon: '📝', desc: '分页查询多维表格记录', component: 'feishu-api', used: true },
+                    { name: 'feishu_bitable_get_record', icon: '🔍', desc: '根据 ID 获取单条记录详情', component: 'feishu-api', used: false },
+                    { name: 'feishu_bitable_create_record', icon: '➕', desc: '创建新的多维表格记录', component: 'feishu-api', used: true },
+                    { name: 'feishu_bitable_update_record', icon: '✏️', desc: '更新现有记录', component: 'feishu-api', used: true },
+                    { name: 'feishu_bitable_create_field', icon: '📊', desc: '创建新的表格字段', component: 'feishu-api', used: false },
+                    { name: 'feishu_bitable_create_app', icon: '🆕', desc: '创建新的多维表格应用', component: 'feishu-api', used: false }
                 ]
             },
             // 文档协作
@@ -236,12 +266,12 @@
                 category: '📝 文档协作',
                 icon: '📝',
                 skills: [
-                    { name: 'feishu_doc_read', icon: '📖', desc: '读取飞书云文档内容', component: 'feishu-api' },
-                    { name: 'feishu_doc_write', icon: '📝', desc: '写入/更新飞书云文档', component: 'feishu-api' },
-                    { name: 'feishu_doc_append', icon: '➕', desc: '追加内容到文档末尾', component: 'feishu-api' },
-                    { name: 'feishu_doc_create', icon: '🆕', desc: '创建新文档', component: 'feishu-api' },
-                    { name: 'feishu_doc_create_table', icon: '📊', desc: '在文档中创建表格', component: 'feishu-api' },
-                    { name: 'feishu_doc_upload_image', icon: '🖼️', desc: '上传图片到文档', component: 'feishu-api' }
+                    { name: 'feishu_doc_read', icon: '📖', desc: '读取飞书云文档内容', component: 'feishu-api', used: true },
+                    { name: 'feishu_doc_write', icon: '📝', desc: '写入/更新飞书云文档', component: 'feishu-api', used: true },
+                    { name: 'feishu_doc_append', icon: '➕', desc: '追加内容到文档末尾', component: 'feishu-api', used: true },
+                    { name: 'feishu_doc_create', icon: '🆕', desc: '创建新文档', component: 'feishu-api', used: false },
+                    { name: 'feishu_doc_create_table', icon: '📊', desc: '在文档中创建表格', component: 'feishu-api', used: false },
+                    { name: 'feishu_doc_upload_image', icon: '🖼️', desc: '上传图片到文档', component: 'feishu-api', used: false }
                 ]
             },
             // 云存储
@@ -249,11 +279,11 @@
                 category: '☁️ 云存储',
                 icon: '☁️',
                 skills: [
-                    { name: 'feishu_drive_list', icon: '📁', desc: '列出云盘文件夹内容', component: 'feishu-api' },
-                    { name: 'feishu_drive_info', icon: 'ℹ️', desc: '获取文件/文件夹详情', component: 'feishu-api' },
-                    { name: 'feishu_drive_create_folder', icon: '📂', desc: '创建新文件夹', component: 'feishu-api' },
-                    { name: 'feishu_drive_move', icon: '📦', desc: '移动文件/文件夹', component: 'feishu-api' },
-                    { name: 'feishu_drive_delete', icon: '🗑️', desc: '删除文件/文件夹', component: 'feishu-api' }
+                    { name: 'feishu_drive_list', icon: '📁', desc: '列出云盘文件夹内容', component: 'feishu-api', used: false },
+                    { name: 'feishu_drive_info', icon: 'ℹ️', desc: '获取文件/文件夹详情', component: 'feishu-api', used: false },
+                    { name: 'feishu_drive_create_folder', icon: '📂', desc: '创建新文件夹', component: 'feishu-api', used: false },
+                    { name: 'feishu_drive_move', icon: '📦', desc: '移动文件/文件夹', component: 'feishu-api', used: false },
+                    { name: 'feishu_drive_delete', icon: '🗑️', desc: '删除文件/文件夹', component: 'feishu-api', used: false }
                 ]
             },
             // 知识库
@@ -261,12 +291,12 @@
                 category: '📚 知识库',
                 icon: '📚',
                 skills: [
-                    { name: 'feishu_wiki_spaces', icon: '🌐', desc: '获取知识库空间列表', component: 'feishu-api' },
-                    { name: 'feishu_wiki_nodes', icon: '📑', desc: '获取知识库节点树', component: 'feishu-api' },
-                    { name: 'feishu_wiki_get', icon: '📖', desc: '获取知识库节点内容', component: 'feishu-api' },
-                    { name: 'feishu_wiki_create', icon: '🆕', desc: '创建知识库节点', component: 'feishu-api' },
-                    { name: 'feishu_wiki_move', icon: '📦', desc: '移动知识库节点', component: 'feishu-api' },
-                    { name: 'feishu_wiki_rename', icon: '✏️', desc: '重命名知识库节点', component: 'feishu-api' }
+                    { name: 'feishu_wiki_spaces', icon: '🌐', desc: '获取知识库空间列表', component: 'feishu-api', used: false },
+                    { name: 'feishu_wiki_nodes', icon: '📑', desc: '获取知识库节点树', component: 'feishu-api', used: false },
+                    { name: 'feishu_wiki_get', icon: '📖', desc: '获取知识库节点内容', component: 'feishu-api', used: false },
+                    { name: 'feishu_wiki_create', icon: '🆕', desc: '创建知识库节点', component: 'feishu-api', used: false },
+                    { name: 'feishu_wiki_move', icon: '📦', desc: '移动知识库节点', component: 'feishu-api', used: false },
+                    { name: 'feishu_wiki_rename', icon: '✏️', desc: '重命名知识库节点', component: 'feishu-api', used: false }
                 ]
             },
             // 会话管理
@@ -274,12 +304,12 @@
                 category: '💬 会话管理',
                 icon: '💬',
                 skills: [
-                    { name: 'sessions_list', icon: '📋', desc: '列出所有会话，支持过滤', component: 'session-core' },
-                    { name: 'sessions_history', icon: '📜', desc: '获取会话历史消息', component: 'session-core' },
-                    { name: 'sessions_send', icon: '✉️', desc: '向其他会话发送消息', component: 'session-core' },
-                    { name: 'sessions_spawn', icon: '🚀', desc: ' spawn 子代理或 ACP 会话', component: 'session-core' },
-                    { name: 'subagents', icon: '🤖', desc: '管理子代理（列表/终止/引导）', component: 'session-core' },
-                    { name: 'session_status', icon: '📊', desc: '查看会话状态和使用情况', component: 'session-core' }
+                    { name: 'sessions_list', icon: '📋', desc: '列出所有会话，支持过滤', component: 'session-core', used: true },
+                    { name: 'sessions_history', icon: '📜', desc: '获取会话历史消息', component: 'session-core', used: false },
+                    { name: 'sessions_send', icon: '✉️', desc: '向其他会话发送消息', component: 'session-core', used: true },
+                    { name: 'sessions_spawn', icon: '🚀', desc: 'spawn 子代理或 ACP 会话', component: 'session-core', used: true },
+                    { name: 'subagents', icon: '🤖', desc: '管理子代理（列表/终止/引导）', component: 'session-core', used: true },
+                    { name: 'session_status', icon: '📊', desc: '查看会话状态和使用情况', component: 'session-core', used: true }
                 ]
             },
             // 浏览器控制
@@ -287,12 +317,12 @@
                 category: '🌐 浏览器控制',
                 icon: '🌐',
                 skills: [
-                    { name: 'browser_status', icon: 'ℹ️', desc: '查看浏览器状态', component: 'browser-server' },
-                    { name: 'browser_start', icon: '▶️', desc: '启动浏览器', component: 'browser-server' },
-                    { name: 'browser_snapshot', icon: '📸', desc: '获取页面快照', component: 'browser-server' },
-                    { name: 'browser_act', icon: '🎯', desc: '执行页面操作（点击/输入等）', component: 'browser-server' },
-                    { name: 'browser_navigate', icon: '🧭', desc: '导航到指定 URL', component: 'browser-server' },
-                    { name: 'browser_screenshot', icon: '📷', desc: '截取页面截图', component: 'browser-server' }
+                    { name: 'browser_status', icon: 'ℹ️', desc: '查看浏览器状态', component: 'browser-server', used: false },
+                    { name: 'browser_start', icon: '▶️', desc: '启动浏览器', component: 'browser-server', used: false },
+                    { name: 'browser_snapshot', icon: '📸', desc: '获取页面快照', component: 'browser-server', used: true },
+                    { name: 'browser_act', icon: '🎯', desc: '执行页面操作（点击/输入等）', component: 'browser-server', used: true },
+                    { name: 'browser_navigate', icon: '🧭', desc: '导航到指定 URL', component: 'browser-server', used: false },
+                    { name: 'browser_screenshot', icon: '📷', desc: '截取页面截图', component: 'browser-server', used: false }
                 ]
             },
             // 文件操作
@@ -300,11 +330,11 @@
                 category: '📁 文件操作',
                 icon: '📁',
                 skills: [
-                    { name: 'read', icon: '📖', desc: '读取文件内容，支持文本和图片', component: 'fs-core' },
-                    { name: 'write', icon: '📝', desc: '创建或覆盖文件', component: 'fs-core' },
-                    { name: 'edit', icon: '✏️', desc: '精确编辑文件内容', component: 'fs-core' },
-                    { name: 'exec', icon: '⚡', desc: '执行 Shell 命令', component: 'shell-core' },
-                    { name: 'process', icon: '🔄', desc: '管理后台进程', component: 'shell-core' }
+                    { name: 'read', icon: '📖', desc: '读取文件内容，支持文本和图片', component: 'fs-core', used: true },
+                    { name: 'write', icon: '📝', desc: '创建或覆盖文件', component: 'fs-core', used: true },
+                    { name: 'edit', icon: '✏️', desc: '精确编辑文件内容', component: 'fs-core', used: true },
+                    { name: 'exec', icon: '⚡', desc: '执行 Shell 命令', component: 'shell-core', used: true },
+                    { name: 'process', icon: '🔄', desc: '管理后台进程', component: 'shell-core', used: true }
                 ]
             },
             // 消息通知
@@ -312,9 +342,9 @@
                 category: '📧 消息通知',
                 icon: '📧',
                 skills: [
-                    { name: 'message_send', icon: '✉️', desc: '发送消息到频道/用户', component: 'channel-plugins' },
-                    { name: 'message_broadcast', icon: '📢', desc: '广播消息', component: 'channel-plugins' },
-                    { name: 'tts', icon: '🔊', desc: '文本转语音', component: 'tts-engine' }
+                    { name: 'message_send', icon: '✉️', desc: '发送消息到频道/用户', component: 'channel-plugins', used: true },
+                    { name: 'message_broadcast', icon: '📢', desc: '广播消息', component: 'channel-plugins', used: false },
+                    { name: 'tts', icon: '🔊', desc: '文本转语音', component: 'tts-engine', used: false }
                 ]
             },
             // 设备管理
@@ -322,12 +352,12 @@
                 category: '📱 设备管理',
                 icon: '📱',
                 skills: [
-                    { name: 'nodes_status', icon: 'ℹ️', desc: '查看节点状态', component: 'node-core' },
-                    { name: 'nodes_describe', icon: '📋', desc: '获取节点详细信息', component: 'node-core' },
-                    { name: 'nodes_notify', icon: '🔔', desc: '发送设备通知', component: 'node-core' },
-                    { name: 'nodes_camera_snap', icon: '📷', desc: '拍摄设备照片', component: 'node-core' },
-                    { name: 'nodes_screen_record', icon: '🎥', desc: '录制设备屏幕', component: 'node-core' },
-                    { name: 'nodes_location_get', icon: '📍', desc: '获取设备位置', component: 'node-core' }
+                    { name: 'nodes_status', icon: 'ℹ️', desc: '查看节点状态', component: 'node-core', used: true },
+                    { name: 'nodes_describe', icon: '📋', desc: '获取节点详细信息', component: 'node-core', used: false },
+                    { name: 'nodes_notify', icon: '🔔', desc: '发送设备通知', component: 'node-core', used: false },
+                    { name: 'nodes_camera_snap', icon: '📷', desc: '拍摄设备照片', component: 'node-core', used: false },
+                    { name: 'nodes_screen_record', icon: '🎥', desc: '录制设备屏幕', component: 'node-core', used: false },
+                    { name: 'nodes_location_get', icon: '📍', desc: '获取设备位置', component: 'node-core', used: false }
                 ]
             },
             // Canvas 控制
@@ -335,10 +365,10 @@
                 category: '🎨 Canvas 控制',
                 icon: '🎨',
                 skills: [
-                    { name: 'canvas_present', icon: '📺', desc: '呈现 Canvas 内容', component: 'canvas-core' },
-                    { name: 'canvas_navigate', icon: '🧭', desc: '导航 Canvas 到 URL', component: 'canvas-core' },
-                    { name: 'canvas_snapshot', icon: '📸', desc: '截取 Canvas 快照', component: 'canvas-core' },
-                    { name: 'canvas_eval', icon: '⚡', desc: '执行 Canvas JavaScript', component: 'canvas-core' }
+                    { name: 'canvas_present', icon: '📺', desc: '呈现 Canvas 内容', component: 'canvas-core', used: false },
+                    { name: 'canvas_navigate', icon: '🧭', desc: '导航 Canvas 到 URL', component: 'canvas-core', used: false },
+                    { name: 'canvas_snapshot', icon: '📸', desc: '截取 Canvas 快照', component: 'canvas-core', used: false },
+                    { name: 'canvas_eval', icon: '⚡', desc: '执行 Canvas JavaScript', component: 'canvas-core', used: false }
                 ]
             }
         ];
@@ -378,6 +408,9 @@
                                         </div>
                                         <p class="skill-desc">${skill.desc}</p>
                                         <span class="skill-component">${skill.component}</span>
+                                        <span class="skill-status ${skill.used ? 'used' : 'unused'}">
+                                            ${skill.used ? '✅ 已使用' : '⭕ 未使用'}
+                                        </span>
                                     </div>
                                 `).join('')}
                             </div>
