@@ -7,6 +7,19 @@ window.completedTasks = [];
 
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
+    // 立即显示内联统计数据（如果有）
+    if (window.INLINE_STATS) {
+        const progressEl = document.getElementById('progressCount');
+        const todoEl = document.getElementById('todoCount');
+        const completedEl = document.getElementById('completedCount');
+        
+        console.log('⚡ 使用内联统计数据:', window.INLINE_STATS);
+        
+        if (progressEl) progressEl.textContent = `${window.INLINE_STATS.progress}个`;
+        if (todoEl) todoEl.textContent = `${window.INLINE_STATS.todo}个`;
+        if (completedEl) completedEl.textContent = `${window.INLINE_STATS.done}个`;
+    }
+    
     loadTasks();
 });
 
@@ -53,7 +66,6 @@ let currentIdentity = 'all';
 // 渲染任务列表（只显示执行中的任务）
 function renderTasks() {
     const taskList = document.getElementById('taskList');
-    const progressCount = document.getElementById('progressCount');
     if (!taskList) return;
     
     taskList.innerHTML = '';
@@ -69,8 +81,10 @@ function renderTasks() {
         }
     }
     
-    if (progressCount) {
-        progressCount.textContent = `${filteredTasks.length}个`;
+    // 更新执行中任务卡片数量徽章（不是顶部统计）
+    const progressBadge = document.querySelector('#taskList .section-header .badge');
+    if (progressBadge) {
+        progressBadge.textContent = `${filteredTasks.length}个`;
     }
     
     if (filteredTasks.length === 0) {
@@ -222,17 +236,17 @@ function getGradientColor(type) {
 
 // 更新统计（顶部卡片数字）
 function updateStats() {
+    const progressEl = document.getElementById('progressCount');
+    const todoEl = document.getElementById('todoCount');
+    const completedEl = document.getElementById('completedCount');
+    
     // 优先使用 statistics 字段（后端已计算好的准确数据）
-    if (window.dashboardStatistics) {
-        const progressEl = document.getElementById('progressCount');
-        const todoEl = document.getElementById('todoCount');
-        const completedEl = document.getElementById('completedCount');
+    if (window.dashboardStatistics && window.dashboardStatistics.verified) {
+        console.log('📊 使用后端统计数据:', window.dashboardStatistics);
         
         if (progressEl) progressEl.textContent = `${window.dashboardStatistics.progress}个`;
         if (todoEl) todoEl.textContent = `${window.dashboardStatistics.todo}个`;
         if (completedEl) completedEl.textContent = `${window.dashboardStatistics.done}个`;
-        
-        console.log('📊 统计数据（来自 statistics 字段）:', window.dashboardStatistics);
         return;
     }
     
@@ -241,15 +255,11 @@ function updateStats() {
     const todoCount = (tasks.filter(t => t.status === 'todo').length) + (window.todoTasks?.length || 0);
     const completedCount = window.completedTasks?.length || 0;
     
-    const progressEl = document.getElementById('progressCount');
-    const todoEl = document.getElementById('todoCount');
-    const completedEl = document.getElementById('completedCount');
+    console.log('📊 使用前端计算统计:', { progress: progressCount, todo: todoCount, done: completedCount });
     
     if (progressEl) progressEl.textContent = `${progressCount}个`;
     if (todoEl) todoEl.textContent = `${todoCount}个`;
     if (completedEl) completedEl.textContent = `${completedCount}个`;
-    
-    console.log('📊 统计数据（计算得到）:', { progress: progressCount, todo: todoCount, done: completedCount });
 }
 
 // 更新时间
