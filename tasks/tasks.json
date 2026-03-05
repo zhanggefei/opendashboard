@@ -1,10 +1,10 @@
 {
-  "lastUpdate": "2026-03-05T08:45:31+08:00",
+  "lastUpdate": "2026-03-05T09:44:54+08:00",
   "statistics": {
     "progress": 2,
-    "todo": 0,
+    "todo": 1,
     "done": 2,
-    "total": 2,
+    "total": 3,
     "verified": true
   },
   "settings": {
@@ -20,14 +20,14 @@
       "status": "progress",
       "progress": 50,
       "description": "与用户交互 - OpenDashboard 优化、定时任务管理、技能中心美化 (qwen3.5-plus)",
-      "startTime": "2026-03-05 08:45",
+      "startTime": "2026-03-05 09:40",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "0分钟",
+      "executionTime": "4分钟",
       "tokenUsage": {
-        "input": 6428545,
-        "output": 16543,
-        "total": 123855
+        "input": 320055,
+        "output": 3855,
+        "total": 161460
       },
       "metadata": {
         "sessionKey": "agent:main:main",
@@ -60,7 +60,24 @@
       }
     }
   ],
-  "todoTasks": [],
+  "todoTasks": [
+    {
+      "id": "FEISHU_20260305094111",
+      "title": "跟进宁夏国网客户，需要今天联系 #优先级 P1",
+      "description": "任务：跟进宁夏国网客户，需要今天联系 #优先级 P1",
+      "priority": "P0",
+      "status": "todo",
+      "progress": 0,
+      "source": "feishu",
+      "assignee": "狗蛋",
+      "created_at": "2026-03-05T09:41:11.736575",
+      "deadline": "2026-03-05",
+      "metadata": {
+        "sender": "测试",
+        "channel": "feishu"
+      }
+    }
+  ],
   "completedTasks": [
     {
       "id": "OC003",
