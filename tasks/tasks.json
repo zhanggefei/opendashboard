@@ -1,5 +1,12 @@
 {
-  "lastUpdate": "2026-03-05T01:46:57+08:00",
+  "lastUpdate": "2026-03-05T08:13:07+08:00",
+  "statistics": {
+    "progress": 2,
+    "todo": 0,
+    "done": 2,
+    "total": 2,
+    "verified": true
+  },
   "settings": {
     "autoRetry": true,
     "maxRetries": 3,
@@ -13,14 +20,14 @@
       "status": "progress",
       "progress": 50,
       "description": "与用户交互 - OpenDashboard 优化、定时任务管理、技能中心美化 (qwen3.5-plus)",
-      "startTime": "2026-03-05 01:45",
+      "startTime": "2026-03-05 08:13",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "2分钟",
+      "executionTime": "0分钟",
       "tokenUsage": {
-        "input": 15046687,
-        "output": 2578,
-        "total": 837724
+        "input": 459308,
+        "output": 3702,
+        "total": 48476
       },
       "metadata": {
         "sessionKey": "agent:main:main",
@@ -31,15 +38,15 @@
     },
     {
       "id": "OC002",
-      "title": "📧 飞书消息处理",
-      "priority": "P2",
-      "status": "todo",
-      "progress": 0,
-      "description": "处理飞书渠道消息 (qwen3.5-plus)",
+      "title": "💚 飞书渠道健康检查",
+      "priority": "P0",
+      "status": "progress",
+      "progress": 50,
+      "description": "每 5 分钟自动检查飞书通道状态（网关/API/配置）(qwen3.5-plus)",
       "startTime": "2026-02-28 11:09",
       "assignee": "狗蛋",
       "retryCount": 0,
-      "executionTime": "110.6小时",
+      "executionTime": "每 5 分钟",
       "tokenUsage": {
         "input": 0,
         "output": 0,
@@ -49,35 +56,11 @@
         "sessionKey": "agent:main:feishu:group:oc_c5bf77dfbf8d9cad06208a1aea54413d",
         "kind": "group",
         "model": "qwen3.5-plus",
-        "source": "feishu"
+        "source": "feishu_health"
       }
     }
   ],
-  "todoTasks": [
-    {
-      "id": "OC002",
-      "title": "📧 飞书消息处理",
-      "priority": "P2",
-      "status": "todo",
-      "progress": 0,
-      "description": "处理飞书渠道消息 (qwen3.5-plus)",
-      "startTime": "2026-02-28 11:09",
-      "assignee": "狗蛋",
-      "retryCount": 0,
-      "executionTime": "110.6小时",
-      "tokenUsage": {
-        "input": 0,
-        "output": 0,
-        "total": null
-      },
-      "metadata": {
-        "sessionKey": "agent:main:feishu:group:oc_c5bf77dfbf8d9cad06208a1aea54413d",
-        "kind": "group",
-        "model": "qwen3.5-plus",
-        "source": "feishu"
-      }
-    }
-  ],
+  "todoTasks": [],
   "completedTasks": [
     {
       "id": "OC003",
