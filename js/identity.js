@@ -306,6 +306,10 @@ function completeTask(taskId) {
 
 // 初始化
 window.IdentityManager = IdentityManager;
+
+// 创建全局实例（关键！）
+window.identityManager = new IdentityManager();
+
 window.switchIdentity = switchIdentity;
 window.renderIdentities = renderIdentities;
 window.renderIdentityTabs = renderIdentityTabs;
@@ -313,3 +317,5 @@ window.renderTasks = renderTasks;
 window.renderSkills = renderSkills;
 window.startTask = startTask;
 window.completeTask = completeTask;
+
+console.log('✅ IdentityManager 已初始化');
