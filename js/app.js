@@ -21,6 +21,9 @@ async function loadTasks() {
         window.todoTasks = data.todoTasks || [];
         window.completedTasks = data.completedTasks || [];
         
+        // 保存统计数据（优先使用后端计算的准确数据）
+        window.dashboardStatistics = data.statistics || null;
+        
         window.tasks = tasks;
         
         renderIdentityTabs();
@@ -30,14 +33,18 @@ async function loadTasks() {
         updateStats();
         updateLastUpdate();
         
+        console.log('✅ 任务加载成功，统计数据:', window.dashboardStatistics);
+        
     } catch (error) {
         console.error('加载任务失败:', error);
         tasks = [];
         window.todoTasks = [];
         window.completedTasks = [];
+        window.dashboardStatistics = null;
         renderTasks();
         renderTodoTasks();
         renderCompletedTasks();
+        updateStats();
     }
 }
 
@@ -213,9 +220,36 @@ function getGradientColor(type) {
     return colors[type] || '#6b7280,#4b5563';
 }
 
-// 更新统计
+// 更新统计（顶部卡片数字）
 function updateStats() {
-    // 已在 render 函数中更新
+    // 优先使用 statistics 字段（后端已计算好的准确数据）
+    if (window.dashboardStatistics) {
+        const progressEl = document.getElementById('progressCount');
+        const todoEl = document.getElementById('todoCount');
+        const completedEl = document.getElementById('completedCount');
+        
+        if (progressEl) progressEl.textContent = `${window.dashboardStatistics.progress}个`;
+        if (todoEl) todoEl.textContent = `${window.dashboardStatistics.todo}个`;
+        if (completedEl) completedEl.textContent = `${window.dashboardStatistics.done}个`;
+        
+        console.log('📊 统计数据（来自 statistics 字段）:', window.dashboardStatistics);
+        return;
+    }
+    
+    // 降级方案：自己计算
+    const progressCount = tasks.filter(t => t.status === 'progress').length;
+    const todoCount = (tasks.filter(t => t.status === 'todo').length) + (window.todoTasks?.length || 0);
+    const completedCount = window.completedTasks?.length || 0;
+    
+    const progressEl = document.getElementById('progressCount');
+    const todoEl = document.getElementById('todoCount');
+    const completedEl = document.getElementById('completedCount');
+    
+    if (progressEl) progressEl.textContent = `${progressCount}个`;
+    if (todoEl) todoEl.textContent = `${todoCount}个`;
+    if (completedEl) completedEl.textContent = `${completedCount}个`;
+    
+    console.log('📊 统计数据（计算得到）:', { progress: progressCount, todo: todoCount, done: completedCount });
 }
 
 // 更新时间
