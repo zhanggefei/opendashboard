@@ -162,7 +162,9 @@
                 <p class="subtitle">任务执行看板</p>
                 <div class="header-meta">
                     <span id="lastUpdate">最后更新：--</span>
+                    <span id="syncStatus" style="margin-left: 10px; color: #10b981; font-size: 13px; display: none;"></span>
                     <div class="header-actions">
+                        <button onclick="syncFromOpenClaw()" class="header-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; cursor: pointer;" title="从 OpenClaw 同步任务数据" id="syncBtn">🔄 同步</button>
                         <a href="skills.html" class="header-btn" title="OpenClaw 技能中心">🔧 技能中心</a>
                         <a href="cron_manager.html" class="header-btn" title="定时任务管理">⏰ 定时任务</a>
                     </div>

@@ -5,6 +5,72 @@ window.tasks = [];
 window.todoTasks = [];
 window.completedTasks = [];
 
+// 同步按钮功能
+async function syncFromOpenClaw() {
+    const syncBtn = document.getElementById('syncBtn');
+    const syncStatus = document.getElementById('syncStatus');
+    
+    if (!syncBtn || syncBtn.disabled) return;
+    
+    // 禁用按钮
+    syncBtn.disabled = true;
+    syncBtn.innerHTML = '⏳ 同步中...';
+    syncBtn.style.opacity = '0.6';
+    
+    // 显示状态
+    if (syncStatus) {
+        syncStatus.style.display = 'inline';
+        syncStatus.textContent = '🔄 正在同步...';
+        syncStatus.style.color = '#f59e0b';
+    }
+    
+    try {
+        // 添加时间戳强制刷新
+        const timestamp = Date.now();
+        const response = await fetch('tasks/tasks.json?t=' + timestamp);
+        
+        if (!response.ok) throw new Error('无法获取任务数据');
+        
+        const data = await response.json();
+        const stats = data.statistics || {};
+        
+        // 显示成功状态
+        if (syncStatus) {
+            syncStatus.textContent = '✅ 同步成功！';
+            syncStatus.style.color = '#10b981';
+        }
+        
+        // 重新加载任务
+        await loadTasks();
+        
+        // 3 秒后隐藏状态
+        setTimeout(() => {
+            if (syncStatus) syncStatus.style.display = 'none';
+        }, 3000);
+        
+        alert('✅ 同步成功！\n\n已从 OpenClaw 同步任务数据。\n\n执行中：' + (stats.progress || 0) + ' 个\n待办：' + (stats.todo || 0) + ' 个\n已完成：' + (stats.done || 0) + ' 个');
+    } catch (error) {
+        console.error('同步失败:', error);
+        
+        // 显示错误状态
+        if (syncStatus) {
+            syncStatus.textContent = '❌ 同步失败';
+            syncStatus.style.color = '#ef4444';
+        }
+        
+        alert('❌ 同步失败：' + error.message + '\n\n请确保任务文件存在且可访问。');
+    } finally {
+        // 恢复按钮
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = '🔄 同步';
+        syncBtn.style.opacity = '1';
+    }
+}
+
+// 自动刷新配置
+const AUTO_REFRESH_INTERVAL = 30000; // 30 秒自动刷新一次
+let lastSyncTime = null;
+
 // 页面加载时获取任务
 document.addEventListener('DOMContentLoaded', () => {
     // 立即显示内联统计数据（如果有）
@@ -20,7 +86,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (completedEl) completedEl.textContent = `${window.INLINE_STATS.done}个`;
     }
     
+    // 加载任务
     loadTasks();
+    
+    // 启动自动刷新
+    setInterval(() => {
+        console.log('🔄 自动刷新任务数据...');
+        loadTasks();
+    }, AUTO_REFRESH_INTERVAL);
+    
+    console.log('✅ 页面已加载，自动刷新已启动（30 秒间隔）');
 });
 
 // 加载任务

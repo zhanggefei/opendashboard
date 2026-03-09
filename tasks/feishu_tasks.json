@@ -1,22 +1,5 @@
 {
   "tasks": [],
-  "todoTasks": [
-    {
-      "id": "FEISHU_20260305094111",
-      "title": "跟进宁夏国网客户，需要今天联系 #优先级 P1",
-      "description": "任务：跟进宁夏国网客户，需要今天联系 #优先级 P1",
-      "priority": "P0",
-      "status": "todo",
-      "progress": 0,
-      "source": "feishu",
-      "assignee": "狗蛋",
-      "created_at": "2026-03-05T09:41:11.736575",
-      "deadline": "2026-03-05",
-      "metadata": {
-        "sender": "测试",
-        "channel": "feishu"
-      }
-    }
-  ],
+  "todoTasks": [],
   "completedTasks": []
 }

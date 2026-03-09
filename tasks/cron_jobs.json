@@ -2,39 +2,12 @@
     "version": 1,
     "jobs": [
         {
-            "name": "OpenDashboard \u4efb\u52a1\u540c\u6b65",
-            "schedule": {
-                "kind": "cron",
-                "expr": "*/1 * * * *"
-            },
-            "description": "\u6bcf 1 \u5206\u949f\u540c\u6b65 OpenClaw \u4efb\u52a1\u72b6\u6001\u5230 OpenDashboard\uff08\u9875\u9762\u5237\u65b0\u65f6\u81ea\u52a8\u83b7\u53d6\u6700\u65b0\u6570\u636e\uff09",
-            "enabled": true,
-            "timezone": "Asia/Shanghai",
-            "wakeMode": "now",
-            "payload": {
-                "kind": "systemEvent",
-                "text": "python3 /Users/zhang/.openclaw/workspace/sync_openclaw_tasks.py"
-            },
-            "sessionTarget": "main",
-            "state": {
-                "nextRunAtMs": 1772633100000,
-                "lastRunAtMs": 1772632980011,
-                "lastRunStatus": "ok",
-                "lastStatus": "ok",
-                "lastDurationMs": 114513,
-                "lastDeliveryStatus": "not-requested",
-                "consecutiveErrors": 0,
-                "runningAtMs": 1772633100005
-            },
-            "updatedAtMs": 1772633094524
-        },
-        {
-            "name": "CRM \u6bcf\u65e5\u65e9\u6668\u62a5\u544a",
+            "name": "CRM 每日早晨报告",
             "schedule": {
                 "kind": "cron",
                 "expr": "0 7 * * *"
             },
-            "description": "\u6bcf\u5929\u65e9\u4e0a 7 \u70b9\u63a8\u8350 40 \u4e2a\u4eca\u65e5\u5e94\u8ddf\u8fdb\u5ba2\u6237",
+            "description": "每天早上 7 点推荐 40 个今日应跟进客户",
             "enabled": true,
             "timezone": "Asia/Shanghai",
             "wakeMode": "now",
@@ -48,18 +21,75 @@
             }
         },
         {
-            "name": "CRM \u6bcf\u65e5\u665a\u4e0a\u62a5\u544a",
+            "name": "CRM 每日晚间报告",
             "schedule": {
                 "kind": "cron",
                 "expr": "0 18 * * *"
             },
-            "description": "\u6bcf\u5929\u665a\u4e0a 6 \u70b9\u5206\u6790\u5f53\u65e5\u5ba2\u6237\u8ddf\u8fdb\u60c5\u51b5",
+            "description": "每天晚上 6 点分析当日客户跟进情况",
             "enabled": true,
             "timezone": "Asia/Shanghai",
             "wakeMode": "now",
             "payload": {
                 "kind": "systemEvent",
                 "text": "python3 /Users/zhang/.openclaw/workspace/crm_daily_analysis.py evening"
+            },
+            "sessionTarget": "main",
+            "state": {
+                "nextRunAtMs": 1772704800000
+            }
+        },
+        {
+            "name": "飞书渠道健康检查 - 早上",
+            "schedule": {
+                "kind": "cron",
+                "expr": "0 8 * * *"
+            },
+            "description": "每天早上 8 点检查飞书渠道状态",
+            "enabled": true,
+            "timezone": "Asia/Shanghai",
+            "wakeMode": "now",
+            "payload": {
+                "kind": "systemEvent",
+                "text": "# 飞书渠道健康检查\n飞书渠道状态检查 - 早上 8 点"
+            },
+            "sessionTarget": "main",
+            "state": {
+                "nextRunAtMs": 1772668800000
+            }
+        },
+        {
+            "name": "飞书渠道健康检查 - 中午",
+            "schedule": {
+                "kind": "cron",
+                "expr": "0 12 * * *"
+            },
+            "description": "每天中午 12 点检查飞书渠道状态",
+            "enabled": true,
+            "timezone": "Asia/Shanghai",
+            "wakeMode": "now",
+            "payload": {
+                "kind": "systemEvent",
+                "text": "# 飞书渠道健康检查\n飞书渠道状态检查 - 中午 12 点"
+            },
+            "sessionTarget": "main",
+            "state": {
+                "nextRunAtMs": 1772683200000
+            }
+        },
+        {
+            "name": "飞书渠道健康检查 - 下午",
+            "schedule": {
+                "kind": "cron",
+                "expr": "0 18 * * *"
+            },
+            "description": "每天下午 6 点检查飞书渠道状态",
+            "enabled": true,
+            "timezone": "Asia/Shanghai",
+            "wakeMode": "now",
+            "payload": {
+                "kind": "systemEvent",
+                "text": "# 飞书渠道健康检查\n飞书渠道状态检查 - 下午 6 点"
             },
             "sessionTarget": "main",
             "state": {
